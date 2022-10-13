@@ -1,6 +1,8 @@
 # Ichi Bun Zutsu
 A web app for Japanese reading practice by presenting a Japanese sentence every day.
 
+![](app-demo.gif)
+
 I started this project as a "rehab" project for getting back into programming. While the main goal is to learn NextJS and TypeScript, the web app is something that's relevant to my current "endeavour", which is learning the Japanese language.
 
 ## Useful Links
