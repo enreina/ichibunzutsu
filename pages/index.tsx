@@ -5,6 +5,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {useState} from 'react';
+import { CssBaseline } from '@mui/material';
+import Paper from '@mui/material/Paper';
 
 const Home: NextPage = () => {
   const [isEnglishVisible, setIsEnglishVisible] = useState<Boolean>(false);
@@ -14,19 +16,22 @@ const Home: NextPage = () => {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="xs">
       <Head>
         <title>Ichi Bun Zutsu</title>
         <meta name="description" content="A web app for Japanese reading practice -- one sentence a day." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Box>
-        <Typography variant="subtitle1">１文ずつ</Typography>
-        <Typography variant="subtitle1">Ichi Bun Zutsu</Typography>
-        <Typography variant="h4">僕は世界で一番弱い。</Typography>
-        {isEnglishVisible && <Typography variant="h5">I am the weakest in the world.</Typography>}
-        {!isEnglishVisible && <Button onClick={showEnglishButtonOnClick} variant="contained">英語を表示</Button>}
-      </Box>
+      <CssBaseline />
+
+      <Typography sx={{marginTop: 4}} variant="body2" color="text.secondary" align="center">１文ずつ</Typography>
+      <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
+
+      <Paper sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
+          <Typography component="h1" variant="h4" align="center">僕は世界で一番弱い。</Typography>
+          {isEnglishVisible && <Typography variant="h5" align="center">I am the weakest in the world.</Typography>}
+          {!isEnglishVisible && <Button onClick={showEnglishButtonOnClick} variant="contained" fullWidth>英語を表示</Button>}
+      </Paper>
     </Container>
   );
 };
