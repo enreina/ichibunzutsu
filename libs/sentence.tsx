@@ -1,6 +1,9 @@
 import useSWRImmutable from "swr/immutable";
 
-const WANIKANI_API_KEY = ''; //replace with WaniKani API from https://www.wanikani.com/settings/personal_access_tokens
+type WaniKaniContextSentence = {
+    en: string,
+    ja: string,
+};
 
 const getRandomInt = (min: number, max: number) => {
     min = Math.ceil(min);
@@ -10,12 +13,12 @@ const getRandomInt = (min: number, max: number) => {
 
 const fetcher = (url: string) => fetch(url, {
     headers: {
-        'Authorization': `Bearer ${WANIKANI_API_KEY}` 
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_WANIKANI_API_KEY}` 
     }
 })
 .then(res => res.json())
 .then(data => {
-    let contextSentence: string | null = null;
+    let contextSentence: WaniKaniContextSentence | null = null;
 
     // randomized sentence
     if (data?.data && data.data.length > 0) {
@@ -30,14 +33,14 @@ const fetcher = (url: string) => fetch(url, {
     return contextSentence;
 });
 
-const url = 'https://api.wanikani.com/v2/subjects?types=vocabulary&levels=1,2,3';
+const url: string = 'https://api.wanikani.com/v2/subjects?types=vocabulary&levels=1,2,3';
 
-export const useSentence = () => {
+export const useSentence: () => {sentence: WaniKaniContextSentence | null | undefined, isLoading: boolean, isError: boolean} = () => {
     const {data, error} = useSWRImmutable(url, fetcher);
 
     return {
         sentence: data,
         isLoading: !error && !data,
-        isError: error,
+        isError: !!error,
     };
 };
