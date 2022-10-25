@@ -68,6 +68,7 @@ export default function APIKeyDialog({isOpen}: {isOpen: boolean}) {
           value={value}
           onChange={onAPIKeyTextFieldChange}
           onBlur={onAPIKeyTextFieldBlur}
+          inputProps={{maxLength: API_KEY_LENGTH}}
         />
       </DialogContent>
       <DialogActions>
