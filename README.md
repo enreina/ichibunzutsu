@@ -21,7 +21,10 @@ Then, run the Web App:
 ```
 yarn dev
 ```
-Open http://localhost:3000 with your browser, and you should see a sentence that's fetched from the WaniKani API.
+Open http://localhost:3000 with your browser, and you'll be asked to input your WaniKani API Key. Input your API Key, and after the page loads, you should see a Japanese sentence on the screen.
+
+### Why do I need to input a WaniKani API key?
+The sentence is currently being fetched from WaniKani API through the `/v2/subjects` endpoint (see [WaniKani API Reference](https://docs.api.wanikani.com/20170710/#get-all-subjects) for more details). You need to sign up on [WaniKani](https://wanikani.com/) to get the API Key. Free account works as well as the app currently only fetches sentences from the first 3 levels (which are free). Once you are signed in to WaniKani, you can get the token [here](https://www.wanikani.com/settings/personal_access_tokens).
 
 -----
 
