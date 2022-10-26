@@ -11,13 +11,7 @@ I started this project as a "rehab" project for getting back into programming. W
 - [Notion Notes](https://www.notion.so/Pet-Project-Ichi-Bun-Zutsu-49a98f061b4a4a698fa351a3034845ca)
 
 ## Running the Web App Locally
-The sentence is currently being fetched from WaniKani API through the `/v2/subjects` endpoint (see [WaniKani API Reference](https://docs.api.wanikani.com/20170710/#get-all-subjects) for more details). You need to sign up on [WaniKani](https://wanikani.com/) to get the API Token. Free account works as well as the app currently only fetches sentences from the first 3 levels (which are free). Once signed in to WaniKani, you can get the token [here](https://www.wanikani.com/settings/personal_access_tokens).
-
-Then, create an `.env.local` in the root directory and fill in your API Token:
-```
-NEXT_PUBLIC_WANIKANI_API_KEY=<FILL IN YOUR WANIKANI API TOKEN>
-```
-Then, run the Web App:
+Run the web server:
 ```
 yarn dev
 ```
