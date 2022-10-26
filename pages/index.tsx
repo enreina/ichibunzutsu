@@ -13,7 +13,8 @@ import APIKeyDialog from '../components/APIKeyDialog';
 
 const Home: NextPage = () => {
   const [isEnglishVisible, setIsEnglishVisible] = useState<Boolean>(false);
-  const {sentence, isLoading} = useSentence();
+  const [apiKey, setAPIKey] = useState<string | null>(null);
+  const {sentence, isLoading, isError} = useSentence(apiKey);
 
   const showEnglishButtonOnClick: () => void = () => {
     setIsEnglishVisible(true);
@@ -38,14 +39,22 @@ const Home: NextPage = () => {
             {!isEnglishVisible && <Button onClick={showEnglishButtonOnClick} variant="contained" fullWidth>英語を表示</Button>}
           </>
         )}
-        {isLoading && (
+        {(isLoading || !apiKey)&& (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <CircularProgress />
           </Box>
         )}
+        {(isError && !isLoading && apiKey) && (
+          <>
+            <Typography variant="h5" align="center">Could not fetch sentence from WaniKani</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Button variant="contained" onClick={() => setAPIKey(null)}>Retry</Button>
+            </Box>
+          </>
+        )}
       </Paper>
 
-      <APIKeyDialog isOpen={true} />
+      <APIKeyDialog isOpen={!apiKey} onSubmit={(apiKey) => setAPIKey(apiKey)} />
       
     </Container>
   );

@@ -11,32 +11,42 @@ const getRandomInt = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
 };
 
-const fetcher = (url: string) => fetch(url, {
-    headers: {
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_WANIKANI_API_KEY}` 
+const fetcherWithAPIKey = (url: string, apiKey: string | null) => {
+    if (!apiKey) {
+        return Promise.reject('API Key is required');
     }
-})
-.then(res => res.json())
-.then(data => {
-    let contextSentence: WaniKaniContextSentence | null = null;
 
-    // randomized sentence
-    if (data?.data && data.data.length > 0) {
-        const randomVocabIndex = getRandomInt(0, data.data.length);
-        const randomVocabContextSentences = data.data[randomVocabIndex].data['context_sentences'];
-        if (randomVocabContextSentences.length > 0) {
-            const randomSentenceIndex = getRandomInt(0, randomVocabContextSentences.length);
-            contextSentence = randomVocabContextSentences[randomSentenceIndex];
+    return fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${apiKey}` 
         }
-    }
-    
-    return contextSentence;
-});
+    })
+    .then(res => res.json())
+    .then(data => {
+        let contextSentence: WaniKaniContextSentence | null = null;
+
+        if (data?.error) {
+            return Promise.reject(data.error);
+        }
+
+        // randomized sentence
+        if (data?.data && data.data.length > 0) {
+            const randomVocabIndex = getRandomInt(0, data.data.length);
+            const randomVocabContextSentences = data.data[randomVocabIndex].data['context_sentences'];
+            if (randomVocabContextSentences.length > 0) {
+                const randomSentenceIndex = getRandomInt(0, randomVocabContextSentences.length);
+                contextSentence = randomVocabContextSentences[randomSentenceIndex];
+            }
+        }
+        
+        return contextSentence;
+    });
+};
 
 const url: string = 'https://api.wanikani.com/v2/subjects?types=vocabulary&levels=1,2,3';
 
-export const useSentence: () => {sentence: WaniKaniContextSentence | null | undefined, isLoading: boolean, isError: boolean} = () => {
-    const {data, error} = useSWRImmutable(url, fetcher);
+export const useSentence: (apiKey: string | null) => {sentence: WaniKaniContextSentence | null | undefined, isLoading: boolean, isError: boolean} = (apiKey) => {
+    const {data, error} = useSWRImmutable([url, apiKey], fetcherWithAPIKey);
 
     return {
         sentence: data,

@@ -16,7 +16,7 @@ const isValidAPIKey = (apiKey: string) => {
   return regexExpForUUID.test(apiKey);
 }
 
-export default function APIKeyDialog({isOpen}: {isOpen: boolean}) {
+export default function APIKeyDialog({isOpen, onSubmit}: {isOpen: boolean, onSubmit: (apiKey: string) => void}) {
   const [validableAPIKey, setValidableAPIKey] = useState<{
     value: string,
     isValid: boolean,
@@ -46,7 +46,18 @@ export default function APIKeyDialog({isOpen}: {isOpen: boolean}) {
       errorMessage: prevState.isValid ? "" : INVALID_API_KEY_ERROR_MESSAGE,
     }));
   };
+
   const {value, isValid, errorMessage} = validableAPIKey;
+
+  const proceedButtonOnClick = () => {
+    onSubmit(value);
+    // clear state
+    setValidableAPIKey({
+      value: "",
+      isValid: false,
+      errorMessage: "",
+    });
+  }
 
   return (
       <Dialog open={isOpen}>
@@ -72,7 +83,7 @@ export default function APIKeyDialog({isOpen}: {isOpen: boolean}) {
         />
       </DialogContent>
       <DialogActions>
-        <Button disabled={!isValid}>Proceed</Button>
+        <Button disabled={!isValid} onClick={proceedButtonOnClick}>Proceed</Button>
       </DialogActions>
     </Dialog>
   );
