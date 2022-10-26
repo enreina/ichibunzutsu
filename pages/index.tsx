@@ -22,7 +22,7 @@ const Home: NextPage = () => {
     <Container maxWidth="lg">
       <Head>
         <title>Ichi Bun Zutsu</title>
-        <meta name="description" content="A web app for Japanese reading practice -- one sentence a day." />
+        <meta name="description" content="A web app for Japanese reading practice -- one sentence at a time." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <CssBaseline />
