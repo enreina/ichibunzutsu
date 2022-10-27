@@ -10,10 +10,11 @@ import { CssBaseline } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useSentence } from '../libs/sentence';
 import APIKeyDialog from '../components/APIKeyDialog';
+import useAPIKey from '../libs/hooks/useAPIKey';
 
 const Home: NextPage = () => {
   const [isEnglishVisible, setIsEnglishVisible] = useState<Boolean>(false);
-  const [apiKey, setAPIKey] = useState<string | null>(null);
+  const [apiKey, setAPIKey] = useAPIKey();
   const {sentence, isLoading, isError} = useSentence(apiKey);
 
   const showEnglishButtonOnClick: () => void = () => {
