@@ -37,10 +37,14 @@ const Home: NextPage = () => {
           <>
             <Typography component="h1" variant="h4" align="center">{sentence['ja']}</Typography>
             {isEnglishVisible && <Typography variant="h5" align="center">{sentence['en']}</Typography>}
-            {!isEnglishVisible && <Button onClick={showEnglishButtonOnClick} variant="contained" fullWidth>英語を表示</Button>}
+            {!isEnglishVisible && (
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button onClick={showEnglishButtonOnClick} variant="contained">Show English</Button>
+              </Box>
+            )}
           </>
         )}
-        {(isLoading || !apiKey)&& (
+        {(isLoading || !apiKey) && (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <CircularProgress />
           </Box>
