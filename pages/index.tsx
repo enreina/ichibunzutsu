@@ -15,7 +15,7 @@ import useAPIKey from '../libs/hooks/useAPIKey';
 const Home: NextPage = () => {
   const [isEnglishVisible, setIsEnglishVisible] = useState<Boolean>(false);
   const [apiKey, setAPIKey] = useAPIKey();
-  const {sentence, isLoading, isError} = useSentence(apiKey);
+  const {sentence, isLoading, isError} = useSentence(apiKey, false);
 
   const showEnglishButtonOnClick: () => void = () => {
     setIsEnglishVisible(true);
@@ -59,7 +59,7 @@ const Home: NextPage = () => {
         )}
       </Paper>
 
-      <APIKeyDialog isOpen={!apiKey} onSubmit={(apiKey) => setAPIKey(apiKey)} />
+      {/* <APIKeyDialog isOpen={!apiKey} onSubmit={(apiKey) => setAPIKey(apiKey)} /> */}
       
     </Container>
   );
