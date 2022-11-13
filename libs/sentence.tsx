@@ -45,8 +45,8 @@ const waniKaniFetcher = (url: string, apiKey: string | null) => {
 
 const sheetsonFetcher = (url: string) => {
     const params = {
-        spreadsheetId: process.env.NEXT_PUBLIC_SHEETSON_SPREADHEET_ID,
-        apiKey: process.env.NEXT_PUBLIC_SHEETSON_API_KEY,
+        spreadsheetId: process.env.NEXT_PUBLIC_SHEETSON_SPREADHEET_ID || "",
+        apiKey: process.env.NEXT_PUBLIC_SHEETSON_API_KEY || "",
     };
     const urlSearchParams = new URLSearchParams(params);
     const sentenceCountAPIUrl = `${url}SentenceCount/2?${urlSearchParams}`;
