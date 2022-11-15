@@ -10,15 +10,32 @@ I started this project as a "rehab" project for getting back into programming. W
 - [Figma Design](https://www.figma.com/file/13XJUSltNujMuN8H8Rq6h4/Ichi-Bun-Zutsu?node-id=2%3A3)
 - [Notion Notes](https://www.notion.so/Pet-Project-Ichi-Bun-Zutsu-49a98f061b4a4a698fa351a3034845ca)
 
+## Setup Environment Variables
+Copy `.env.sample` to `.env.local`
+```bash
+cp .env.sample .env.local
+```
+and make sure `NEXT_PUBLIC_WANIKANI_ENABLED` is set to `1` to enable fetching sentence from WaniKani API. 
+Alternatively you could also disable WaniKani by removing this variable from your `.env.local`. In this case, you'd need to setup a Google Sheet for fetching the sentence:
+1. Make a copy of this Google Sheet spreadsheet: https://docs.google.com/spreadsheets/d/1Ejvindpn_eqY3tZHbFxjHeqlyNdiaJP-XOjZ89JA1EE/edit?usp=sharing
+2. Sign up a https://sheetson.com account (login with your gmail account)
+3. Share your copy of the spreadsheet to google@sheetson.com
+4. Get the spreadsheet id as described in: https://docs.sheetson.com/getting-started/#getting-spreadsheet-id-and-sheet-name. Set the `NEXT_PUBLIC_SHEETSON_SPREADHEET_ID` in `.env.local` with this value.
+5. Get your Sheetson API Key from https://sheetson.com/console, and set it as value of the `NEXT_PUBLIC_SHEETSON_API_KEY` variable on your `.env.local`
+
+Note that the sentences from the sample spreadsheet are downloaded from tatoeba.org.
+
+Another note: With current implementation, the `NEXT_PUBLIC_SHEETSON_SPREADHEET_ID` and `NEXT_PUBLIC_SHEETSON_API_KEY` are exposed on the client side. In near future, fetching from sheetson would be masked with a Next.js API on server side -- thus exposing them to client side would not be necessary (and preferred).
+
 ## Running the Web App Locally
 Run the web server:
 ```
 yarn dev
 ```
-Open http://localhost:3000 with your browser, and you'll be asked to input your WaniKani API Key. Input your API Key, and after the page loads, you should see a Japanese sentence on the screen.
+Open http://localhost:3000 with your browser. If WaniKani fetching is enabled, you'll be asked to input your WaniKani API Key. Input your API Key, and after the page loads, you should see a Japanese sentence on the screen. 
 
 ### Why do I need to input a WaniKani API key?
-The sentence is currently being fetched from WaniKani API through the `/v2/subjects` endpoint (see [WaniKani API Reference](https://docs.api.wanikani.com/20170710/#get-all-subjects) for more details). You need to sign up on [WaniKani](https://wanikani.com/) to get the API Key. Free account works as well as the app currently only fetches sentences from the first 3 levels (which are free). Once you are signed in to WaniKani, you can get the token [here](https://www.wanikani.com/settings/personal_access_tokens).
+If WaniKani fetching is enabled, the sentence would be fetched from WaniKani API through the `/v2/subjects` endpoint (see [WaniKani API Reference](https://docs.api.wanikani.com/20170710/#get-all-subjects) for more details). You need to sign up on [WaniKani](https://wanikani.com/) to get the API Key. Free account works as well as the app currently only fetches sentences from the first 3 levels (which are free). Once you are signed in to WaniKani, you can get the token [here](https://www.wanikani.com/settings/personal_access_tokens).
 
 -----
 

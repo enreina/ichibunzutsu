@@ -13,9 +13,10 @@ import APIKeyDialog from '../components/APIKeyDialog';
 import useAPIKey from '../libs/hooks/useAPIKey';
 
 const Home: NextPage = () => {
+  const isWaniKaniEnabled: boolean = process.env.NEXT_PUBLIC_WANIKANI_ENABLED === "1";
   const [isEnglishVisible, setIsEnglishVisible] = useState<Boolean>(false);
   const [apiKey, setAPIKey] = useAPIKey();
-  const {sentence, isLoading, isError} = useSentence(apiKey);
+  const {sentence, isLoading, isError} = useSentence(apiKey, isWaniKaniEnabled);
 
   const showEnglishButtonOnClick: () => void = () => {
     setIsEnglishVisible(true);
@@ -44,12 +45,12 @@ const Home: NextPage = () => {
             )}
           </>
         )}
-        {(isLoading || !apiKey) && (
+        {(isLoading || (isWaniKaniEnabled && !apiKey)) && (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <CircularProgress />
           </Box>
         )}
-        {(isError && !isLoading && apiKey) && (
+        {isWaniKaniEnabled && (isError && !isLoading && apiKey) && (
           <>
             <Typography variant="h5" align="center">Could not fetch sentence from WaniKani</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -59,7 +60,7 @@ const Home: NextPage = () => {
         )}
       </Paper>
 
-      <APIKeyDialog isOpen={!apiKey} onSubmit={(apiKey) => setAPIKey(apiKey)} />
+      {isWaniKaniEnabled && (<><APIKeyDialog isOpen={!apiKey} onSubmit={(apiKey) => setAPIKey(apiKey)} /></>)}
       
     </Container>
   );
