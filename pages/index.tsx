@@ -16,11 +16,19 @@ const Home: NextPage = () => {
   const isWaniKaniEnabled: boolean = process.env.NEXT_PUBLIC_WANIKANI_ENABLED === "1";
   const [isEnglishVisible, setIsEnglishVisible] = useState<Boolean>(false);
   const [apiKey, setAPIKey] = useAPIKey();
-  const {sentence, isLoading, isError} = useSentence(apiKey, isWaniKaniEnabled);
+  const {sentence, isLoading, isError, refetchSentence} = useSentence(apiKey, isWaniKaniEnabled);
 
   const showEnglishButtonOnClick: () => void = () => {
     setIsEnglishVisible(true);
   };
+
+  const errorRetryHandler = () => {
+    if (isWaniKaniEnabled) {
+      setAPIKey(null);
+    } else {
+      refetchSentence();
+    }
+  }
 
   return (
     <Container maxWidth="lg">
@@ -34,7 +42,7 @@ const Home: NextPage = () => {
       <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
 
       <Paper sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
-        {sentence && (
+        {!isLoading && sentence && (
           <>
             <Typography component="h1" variant="h4" align="center">{sentence['ja']}</Typography>
             {isEnglishVisible && <Typography variant="h5" align="center">{sentence['en']}</Typography>}
@@ -50,11 +58,11 @@ const Home: NextPage = () => {
             <CircularProgress />
           </Box>
         )}
-        {isWaniKaniEnabled && (isError && !isLoading && apiKey) && (
+        {((isError && !isWaniKaniEnabled) || (isError && isWaniKaniEnabled && !!apiKey)) && (
           <>
-            <Typography variant="h5" align="center">Could not fetch sentence from WaniKani</Typography>
+            <Typography variant="h5" align="center">Could not fetch sentence</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Button variant="contained" onClick={() => setAPIKey(null)}>Retry</Button>
+              <Button variant="contained" onClick={errorRetryHandler}>Retry</Button>
             </Box>
           </>
         )}
