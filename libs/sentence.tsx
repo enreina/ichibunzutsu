@@ -81,15 +81,16 @@ const waniKaniURL: string = 'https://api.wanikani.com/v2/subjects?types=vocabula
 const sheetsonURL: string = 'https://api.sheetson.com/v2/sheets/';
 
 export const useSentence: 
-    (waniKaniApiKey: string | null, fromWaniKani?: boolean) => {sentence: Sentence | null | undefined, isLoading: boolean, isError: boolean} 
+    (waniKaniApiKey: string | null, fromWaniKani?: boolean) => {sentence: Sentence | null | undefined, isLoading: boolean, isError: boolean, refetchSentence: () => void} 
     = (waniKaniApiKey, fromWaniKani=true) => {
     const swrKey = fromWaniKani ? [waniKaniURL, waniKaniApiKey] : sheetsonURL;
     const fetcher = fromWaniKani ? waniKaniFetcher : sheetsonFetcher;
-    const {data, error} = useSWRImmutable(swrKey, fetcher);
+    const {data, error, mutate, isValidating} = useSWRImmutable(swrKey, fetcher, {shouldRetryOnError: false});
 
     return {
         sentence: data,
-        isLoading: !error && !data,
-        isError: !!error,
+        isLoading: isValidating,
+        isError: !isValidating && (!!error || data === null),
+        refetchSentence: mutate,
     };
 };
