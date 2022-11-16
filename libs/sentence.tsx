@@ -81,7 +81,7 @@ const waniKaniURL: string = 'https://api.wanikani.com/v2/subjects?types=vocabula
 const sheetsonURL: string = 'https://api.sheetson.com/v2/sheets/';
 
 export const useSentence: 
-    (waniKaniApiKey: string | null, fromWaniKani?: boolean) => {sentence: Sentence | null | undefined, isLoading: boolean, isError: boolean, retryOnError: () => void} 
+    (waniKaniApiKey: string | null, fromWaniKani?: boolean) => {sentence: Sentence | null | undefined, isLoading: boolean, isError: boolean, refetchSentence: () => void} 
     = (waniKaniApiKey, fromWaniKani=true) => {
     const swrKey = fromWaniKani ? [waniKaniURL, waniKaniApiKey] : sheetsonURL;
     const fetcher = fromWaniKani ? waniKaniFetcher : sheetsonFetcher;
