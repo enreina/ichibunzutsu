@@ -1,53 +1,15 @@
 import useSWRImmutable from "swr/immutable";
+import type {Sentence} from "../pages/api/sentence";
 
-const waniKaniURL: string = 'https://api.wanikani.com/v2/subjects?types=vocabulary&levels=1,2,3';
-const sentenceAPIEndpoint: string = "/api/sentence";
+const SENTENCE_API_ENDPOINT: string = "/api/sentence";
 
-type Sentence = {
-    en: string,
-    ja: string,
-};
-
-const getRandomInt = (min: number, max: number) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-};
-
-const waniKaniFetcher = (url: string, apiKey: string | null) => {
-    if (!apiKey) {
-        return Promise.reject('API Key is required');
-    }
-
-    return fetch(url, {
-        headers: {
-            'Authorization': `Bearer ${apiKey}` 
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        let contextSentence: Sentence | null = null;
-
-        if (data?.error) {
-            return Promise.reject(data.error);
-        }
-
-        // randomized sentence
-        if (data?.data && data.data.length > 0) {
-            const randomVocabIndex = getRandomInt(0, data.data.length);
-            const randomVocabContextSentences = data.data[randomVocabIndex].data['context_sentences'];
-            if (randomVocabContextSentences.length > 0) {
-                const randomSentenceIndex = getRandomInt(0, randomVocabContextSentences.length);
-                contextSentence = randomVocabContextSentences[randomSentenceIndex];
-            }
-        }
-        
-        return contextSentence;
+const sentenceFetcher = (url: string, params: {shouldFetchFromWaniKani: boolean, waniKaniAPIKey: string | null}) => {
+    const {shouldFetchFromWaniKani, waniKaniAPIKey} = params;
+    const urlSearchParams = new URLSearchParams({
+        shouldFetchFromWaniKani: shouldFetchFromWaniKani ? "true" : "false",
+        waniKaniAPIKey: waniKaniAPIKey || "",
     });
-};
-
-const sentenceFetcher = (url: string) => {
-    return fetch(sentenceAPIEndpoint).then(res => {
+    return fetch(`${SENTENCE_API_ENDPOINT}?${urlSearchParams}`).then(res => {
         if (res.ok) {
             return res.json();
         }
@@ -57,11 +19,13 @@ const sentenceFetcher = (url: string) => {
 };
 
 export const useSentence: 
-    (waniKaniApiKey: string | null, fromWaniKani?: boolean) => {sentence: Sentence | null | undefined, isLoading: boolean, isError: boolean, refetchSentence: () => void} 
-    = (waniKaniApiKey, fromWaniKani=true) => {
-    const swrKey = fromWaniKani ? [waniKaniURL, waniKaniApiKey] : sentenceAPIEndpoint;
-    const fetcher = fromWaniKani ? waniKaniFetcher : sentenceFetcher;
-    const {data, error, mutate, isValidating} = useSWRImmutable(swrKey, fetcher, {shouldRetryOnError: false});
+    (waniKaniAPIKey: string | null, fromWaniKani?: boolean) => {sentence: Sentence | null | undefined, isLoading: boolean, isError: boolean, refetchSentence: () => void} 
+    = (waniKaniAPIKey, fromWaniKani=true) => {
+    const params = {
+        shouldFetchFromWaniKani: fromWaniKani,
+        waniKaniAPIKey,
+    };
+    const {data, error, mutate, isValidating} = useSWRImmutable([SENTENCE_API_ENDPOINT, params], sentenceFetcher, {shouldRetryOnError: false});
 
     return {
         sentence: data,
