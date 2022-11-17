@@ -16,16 +16,14 @@ Copy `.env.sample` to `.env.local`
 cp .env.sample .env.local
 ```
 and make sure `NEXT_PUBLIC_WANIKANI_ENABLED` is set to `1` to enable fetching sentence from WaniKani API. 
-Alternatively you could also disable WaniKani by removing this variable from your `.env.local`. In this case, you'd need to setup a Google Sheet for fetching the sentence:
+Alternatively you could also disable WaniKani by settings this variable to 0 on your `.env.local`. In this case, you'd need to setup a Google Sheet for fetching the sentence:
 1. Make a copy of this Google Sheet spreadsheet: https://docs.google.com/spreadsheets/d/1Ejvindpn_eqY3tZHbFxjHeqlyNdiaJP-XOjZ89JA1EE/edit?usp=sharing
 2. Sign up a https://sheetson.com account (login with your gmail account)
 3. Share your copy of the spreadsheet to google@sheetson.com
-4. Get the spreadsheet id as described in: https://docs.sheetson.com/getting-started/#getting-spreadsheet-id-and-sheet-name. Set the `NEXT_PUBLIC_SHEETSON_SPREADHEET_ID` in `.env.local` with this value.
-5. Get your Sheetson API Key from https://sheetson.com/console, and set it as value of the `NEXT_PUBLIC_SHEETSON_API_KEY` variable on your `.env.local`
+4. Get the spreadsheet id as described in: https://docs.sheetson.com/getting-started/#getting-spreadsheet-id-and-sheet-name. Set the `SHEETSON_SPREADHEET_ID` in `.env.local` with this spreadsheet id.
+5. Get your Sheetson API Key from https://sheetson.com/console, and set it as value of the `SHEETSON_API_KEY` variable on your `.env.local`
 
-Note that the sentences from the sample spreadsheet are downloaded from tatoeba.org.
-
-Another note: With current implementation, the `NEXT_PUBLIC_SHEETSON_SPREADHEET_ID` and `NEXT_PUBLIC_SHEETSON_API_KEY` are exposed on the client side. In near future, fetching from sheetson would be masked with a Next.js API on server side -- thus exposing them to client side would not be necessary (and preferred).
+Note that the sentences from the sample spreadsheet are downloaded from [Tatoeba](https://tatoeba.org).
 
 ## Running the Web App Locally
 Run the web server:
