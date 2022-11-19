@@ -15,8 +15,7 @@ Copy `.env.sample` to `.env.local`
 ```bash
 cp .env.sample .env.local
 ```
-and make sure `NEXT_PUBLIC_WANIKANI_ENABLED` is set to `1` to enable fetching sentence from WaniKani API. 
-Alternatively you could also disable WaniKani by settings this variable to 0 on your `.env.local`. In this case, you'd need to setup a Google Sheet for fetching the sentence:
+If you want to be able to use the app without a WaniKani account, you'd need to setup a Google Sheet for fetching the sentence:
 1. Make a copy of this Google Sheet spreadsheet: https://docs.google.com/spreadsheets/d/1Ejvindpn_eqY3tZHbFxjHeqlyNdiaJP-XOjZ89JA1EE/edit?usp=sharing
 2. Sign up a https://sheetson.com account (login with your gmail account)
 3. Share your copy of the spreadsheet to google@sheetson.com
@@ -30,7 +29,7 @@ Run the web server:
 ```
 yarn dev
 ```
-Open http://localhost:3000 with your browser. If WaniKani fetching is enabled, you'll be asked to input your WaniKani API Key. Input your API Key, and after the page loads, you should see a Japanese sentence on the screen. 
+Open http://localhost:3000 with your browser. When the app is opened for the first time, a settings dialog would be presented to enable or disable WaniKani integration. If WaniKani fetching is enabled, you'll be asked to input your WaniKani API Key. Input your API Key, and after the page loads, you should see a Japanese sentence on the screen. 
 
 ### Why do I need to input a WaniKani API key?
 If WaniKani fetching is enabled, the sentence would be fetched from WaniKani API through the `/v2/subjects` endpoint (see [WaniKani API Reference](https://docs.api.wanikani.com/20170710/#get-all-subjects) for more details). You need to sign up on [WaniKani](https://wanikani.com/) to get the API Key. Free account works as well as the app currently only fetches sentences from the first 3 levels (which are free). Once you are signed in to WaniKani, you can get the token [here](https://www.wanikani.com/settings/personal_access_tokens).
