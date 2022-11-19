@@ -2,7 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
 //TODO: sync level with user's level
-const WANIKANI_URL: string = 'https://api.wanikani.com/v2/subjects?types=vocabulary&levels=1,2,3';
+const WANIKANI_API_URL: string = 'https://api.wanikani.com/v2';
+const WANIKANI_SUBJECT_ENDPOINT: string = `${WANIKANI_API_URL}/subjects`;
+const WANIKANI_USER_ENDPOINT: string = `${WANIKANI_API_URL}/user`;
 
 export type Sentence = {
     en: string,
@@ -53,11 +55,34 @@ const fetchFromWaniKani = (apiKey: string | null) => {
     if (!apiKey) {
         return Promise.reject('API Key is required');
     }
+    const headers = {
+        'Authorization': `Bearer ${apiKey}` 
+    };
 
-    return fetch(WANIKANI_URL, {
-        headers: {
-            'Authorization': `Bearer ${apiKey}` 
+    return fetch(WANIKANI_USER_ENDPOINT, {headers})
+    .then(res => res.json())
+    .then(data => {
+        if (data?.error) {
+            return Promise.reject(data.error);
         }
+
+        const userLevel = data?.data?.level;
+        if (!userLevel) {
+            return Promise.reject("Error fetching WaniKani user");
+        }
+
+        const userMaxLevelGranted = data?.data?.subscription?.max_level_granted || userLevel;
+        const maxSentenceLevel = Math.min(userLevel, userMaxLevelGranted);
+        const randomizedLevel = getRandomInt(1, maxSentenceLevel+1);
+
+        // Fetch subjects from WaniKani
+        const params = {
+            types: "vocabulary",
+            levels: `${randomizedLevel}`,
+        };
+        const urlSearchParams = new URLSearchParams(params);
+        const waniKaniSentenceURL = `${WANIKANI_SUBJECT_ENDPOINT}?${urlSearchParams}`;
+        return fetch(waniKaniSentenceURL, {headers});
     })
     .then(res => res.json())
     .then(data => {
