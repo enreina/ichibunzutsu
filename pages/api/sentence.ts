@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
-//TODO: sync level with user's level
 const WANIKANI_API_URL: string = 'https://api.wanikani.com/v2';
 const WANIKANI_SUBJECT_ENDPOINT: string = `${WANIKANI_API_URL}/subjects`;
 const WANIKANI_USER_ENDPOINT: string = `${WANIKANI_API_URL}/user`;
