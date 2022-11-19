@@ -46,7 +46,7 @@ const Home: NextPage = () => {
       <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
 
       <Paper sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
-        {!isLoading && sentence && (
+        {!isLoading && savedSettings && sentence && (
           <>
             <Typography component="h1" variant="h4" align="center">{sentence['ja']}</Typography>
             {isEnglishVisible && <Typography variant="h5" align="center">{sentence['en']}</Typography>}
@@ -62,7 +62,7 @@ const Home: NextPage = () => {
             <CircularProgress />
           </Box>
         )}
-        {((isError && !isWaniKaniEnabled) || (isError && isWaniKaniEnabled && !!waniKaniAPIKey)) && (
+        {(isError && savedSettings) && (
           <>
             <Typography variant="h5" align="center">Could not fetch sentence</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>

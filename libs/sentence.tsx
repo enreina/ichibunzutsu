@@ -20,7 +20,7 @@ const sentenceFetcher = (url: string, params: {shouldFetchFromWaniKani: boolean,
 
 export const useSentence: 
     (waniKaniAPIKey?: string, fromWaniKani?: boolean) => {sentence: Sentence | null | undefined, isLoading: boolean, isError: boolean, refetchSentence: () => void} 
-    = (waniKaniAPIKey, fromWaniKani=true) => {
+    = (waniKaniAPIKey, fromWaniKani=false) => {
     const params = {
         shouldFetchFromWaniKani: fromWaniKani,
         waniKaniAPIKey,

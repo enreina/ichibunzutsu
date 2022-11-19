@@ -133,7 +133,7 @@ export default function SettingsDialog({isOpen, onSubmit}: {isOpen: boolean, onS
           label="WaniKani APIv2 Key"
           fullWidth
           variant="standard"
-          value={validableAPIKey?.value}
+          value={validableAPIKey?.value || ""}
           onChange={onAPIKeyTextFieldChange}
           onBlur={onAPIKeyTextFieldBlur}
           inputProps={{maxLength: API_KEY_LENGTH}}
