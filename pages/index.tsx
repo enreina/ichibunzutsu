@@ -9,26 +9,30 @@ import {useState} from 'react';
 import { CssBaseline } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useSentence } from '../libs/sentence';
-import APIKeyDialog from '../components/APIKeyDialog';
-import useAPIKey from '../libs/hooks/useAPIKey';
+import SettingsDialog from '../components/SettingsDialog';
+import type { SettingsType } from '../components/SettingsDialog';
+import useSavedSettings from '../libs/hooks/useSavedSettings';
 
 const Home: NextPage = () => {
-  const isWaniKaniEnabled: boolean = process.env.NEXT_PUBLIC_WANIKANI_ENABLED === "1";
   const [isEnglishVisible, setIsEnglishVisible] = useState<Boolean>(false);
-  const [apiKey, setAPIKey] = useAPIKey();
-  const {sentence, isLoading, isError, refetchSentence} = useSentence(apiKey, isWaniKaniEnabled);
+  const [savedSettings, setSavedSettings] = useSavedSettings();
+  const {isWaniKaniEnabled, waniKaniAPIKey} = savedSettings || {};
+  const {sentence, isLoading, isError, refetchSentence} = useSentence(waniKaniAPIKey, isWaniKaniEnabled);
 
   const showEnglishButtonOnClick: () => void = () => {
     setIsEnglishVisible(true);
   };
 
   const errorRetryHandler = () => {
-    if (isWaniKaniEnabled) {
-      setAPIKey(null);
-    } else {
       refetchSentence();
-    }
-  }
+  };
+
+  const settingsSubmitHandler = (settings: SettingsType) => {
+    setSavedSettings({
+      isWaniKaniEnabled: settings.isWaniKaniEnabled,
+      waniKaniAPIKey: settings.validableAPIKey?.value,
+    });
+  };
 
   return (
     <Container maxWidth="lg">
@@ -53,12 +57,12 @@ const Home: NextPage = () => {
             )}
           </>
         )}
-        {(isLoading || (isWaniKaniEnabled && !apiKey)) && (
+        {(isLoading || (!savedSettings)) && (
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <CircularProgress />
           </Box>
         )}
-        {((isError && !isWaniKaniEnabled) || (isError && isWaniKaniEnabled && !!apiKey)) && (
+        {((isError && !isWaniKaniEnabled) || (isError && isWaniKaniEnabled && !!waniKaniAPIKey)) && (
           <>
             <Typography variant="h5" align="center">Could not fetch sentence</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -67,9 +71,7 @@ const Home: NextPage = () => {
           </>
         )}
       </Paper>
-
-      {isWaniKaniEnabled && (<><APIKeyDialog isOpen={!apiKey} onSubmit={(apiKey) => setAPIKey(apiKey)} /></>)}
-      
+      <SettingsDialog isOpen={!savedSettings} onSubmit={settingsSubmitHandler} />
     </Container>
   );
 };
