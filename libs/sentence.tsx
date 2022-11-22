@@ -19,7 +19,7 @@ const sentenceFetcher = (url: string, params: {shouldFetchFromWaniKani: boolean,
 };
 
 export const useSentence: 
-    (waniKaniAPIKey?: string, fromWaniKani?: boolean) => {sentence: Sentence | null | undefined, isLoading: boolean, isError: boolean, refetchSentence: () => void} 
+    (waniKaniAPIKey?: string, fromWaniKani?: boolean) => {sentence: Sentence | null | undefined, isLoading: boolean, isError: boolean, refetch: () => void} 
     = (waniKaniAPIKey, fromWaniKani=false) => {
     const params = {
         shouldFetchFromWaniKani: fromWaniKani,
@@ -31,6 +31,6 @@ export const useSentence:
         sentence: data,
         isLoading: isValidating,
         isError: !isValidating && (!!error || data === null),
-        refetchSentence: mutate,
+        refetch: mutate,
     };
 };

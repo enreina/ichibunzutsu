@@ -17,13 +17,19 @@ const Home: NextPage = () => {
   const [isEnglishVisible, setIsEnglishVisible] = useState<Boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
   const {isWaniKaniEnabled, waniKaniAPIKey} = savedSettings || {};
-  const {sentence, isLoading, isError, refetchSentence} = useSentence(waniKaniAPIKey, isWaniKaniEnabled);
+  const {sentence, isLoading, isError, refetch} = useSentence(waniKaniAPIKey, isWaniKaniEnabled);
 
   const showEnglishButtonOnClick: () => void = () => {
     setIsEnglishVisible(true);
   };
 
+  const refetchSentence = () => {
+    refetch();
+    setIsEnglishVisible(false);
+  };
+
   const errorRetryHandler = () => {
+      //TODO: reopen settings dialog on unauthorized error
       refetchSentence();
   };
 
@@ -34,10 +40,12 @@ const Home: NextPage = () => {
     });
   };
 
+  const sentenceIsLoaded = !isLoading && savedSettings && sentence;
+
   return (
     <Container maxWidth="lg">
       <Head>
-        <title>Ichi Bun Zutsu</title>
+        <title>Ichi Bun Zutsu - Practice Japanese reading, one sentence at a time</title>
         <meta name="description" content="A web app for Japanese reading practice -- one sentence at a time." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -46,7 +54,7 @@ const Home: NextPage = () => {
       <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
 
       <Paper sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
-        {!isLoading && savedSettings && sentence && (
+        {sentenceIsLoaded && (
           <>
             <Typography component="h1" variant="h4" align="center">{sentence['ja']}</Typography>
             {isEnglishVisible && <Typography variant="h5" align="center">{sentence['en']}</Typography>}
@@ -71,6 +79,13 @@ const Home: NextPage = () => {
           </>
         )}
       </Paper>
+
+      {sentenceIsLoaded && (
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button sx={{textTransform: 'none'}} onClick={refetchSentence} variant="text">I want to read another sentence</Button>
+        </Box>
+      )}
+
       <SettingsDialog isOpen={!savedSettings} onSubmit={settingsSubmitHandler} />
     </Container>
   );
