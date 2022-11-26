@@ -34,3 +34,12 @@ export const useSentence:
         refetch: mutate,
     };
 };
+
+export const JapaneseSentenceElement = ({sentence, showFurigana = true} : {sentence: Sentence, showFurigana?: boolean}) => {
+    if (showFurigana && sentence.furiganaHTML) {
+        return <div dangerouslySetInnerHTML={{__html: sentence.furiganaHTML}}></div>;
+    } else {
+        return <>{sentence.ja}</>;
+    }
+};
+
