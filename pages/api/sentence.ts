@@ -18,6 +18,7 @@ const convertToFuriganaHTML = async (sentence: string) => {
     try {
         const kuroshiro = new Kuroshiro();
         await kuroshiro.init(new KuromojiAnalyzer());
+        console.log(__dirname);
         result = await kuroshiro.convert(sentence, {mode:"furigana", to:"hiragana"});
     } catch(error) {
         console.error(`Fail to add furigana: ${error}`);
