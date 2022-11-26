@@ -14,7 +14,7 @@ export type Sentence = {
 };
 
 const convertToFuriganaHTML = async (sentence: string) => {
-    const kuroshiro = new Kuroshiro();
+    const kuroshiro = new Kuroshiro({dictPath: '/dict'});
     await kuroshiro.init(new KuromojiAnalyzer());
     let result;
     try {
