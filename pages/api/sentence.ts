@@ -14,10 +14,10 @@ export type Sentence = {
 };
 
 const convertToFuriganaHTML = async (sentence: string) => {
-    const kuroshiro = new Kuroshiro({dictPath: '/dict'});
-    await kuroshiro.init(new KuromojiAnalyzer());
     let result;
     try {
+        const kuroshiro = new Kuroshiro();
+        await kuroshiro.init(new KuromojiAnalyzer());
         result = await kuroshiro.convert(sentence, {mode:"furigana", to:"hiragana"});
     } catch(error) {
         console.error(`Fail to add furigana: ${error}`);
