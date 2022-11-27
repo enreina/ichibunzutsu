@@ -3,11 +3,6 @@ import Kuroshiro from "kuroshiro";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 import path from "path";
 
-const KUROMOJI_DICTIONARY_DIR = 'private/kuromoji/dict';
-export const config = {
-    unstable_includeFiles: [KUROMOJI_DICTIONARY_DIR],
-};
-
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
 const WANIKANI_API_URL: string = 'https://api.wanikani.com/v2';
 const WANIKANI_SUBJECT_ENDPOINT: string = `${WANIKANI_API_URL}/subjects`;
@@ -19,11 +14,18 @@ export type Sentence = {
     furiganaHTML?: string,
 };
 
+// Temporary workaround for: Error: ENOENT: no such file or directory
+// When calling initializing KuroMoji Analyzer
+// See: https://github.com/vercel/next.js/issues/8251#issuecomment-960792582
+export const config = {
+    unstable_includeFiles: ['dict'],
+};
+
 const convertToFuriganaHTML = async (sentence: string) => {
     let result;
     try {
         const kuroshiro = new Kuroshiro();
-        const dictPath = path.join(process.cwd(), KUROMOJI_DICTIONARY_DIR);
+        const dictPath = path.join(process.cwd(), "dict");
         await kuroshiro.init(new KuromojiAnalyzer({dictPath}));
         result = await kuroshiro.convert(sentence, {mode:"furigana", to:"hiragana"});
     } catch(error) {
