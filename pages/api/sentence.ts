@@ -22,9 +22,9 @@ const convertToFuriganaHTML = async (sentence: string) => {
     let result;
     try {
         const kuroshiro = new Kuroshiro();
-        // const dictPath = path.join(process.cwd(), process.env.KUROMOJI_DICT_DIRECTORY || "");
-        // console.log(`DictPath: ${dictPath}`);
-        await kuroshiro.init(new KuromojiAnalyzer());
+        const dictPath = path.join(process.cwd(), "node_modules/kuromoji/dict");
+        console.log(`DictPath: ${dictPath}`);
+        await kuroshiro.init(new KuromojiAnalyzer({dictPath}));
         result = await kuroshiro.convert(sentence, {mode:"furigana", to:"hiragana"});
     } catch(error) {
         console.error(`Fail to add furigana: ${error}`);
