@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Kuroshiro from "kuroshiro";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
+import path from "path";
 
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
 const WANIKANI_API_URL: string = 'https://api.wanikani.com/v2';
@@ -17,7 +18,9 @@ const convertToFuriganaHTML = async (sentence: string) => {
     let result;
     try {
         const kuroshiro = new Kuroshiro();
-        await kuroshiro.init(new KuromojiAnalyzer({dictPath: process.env.KUROMOJI_DICT_DIRECTORY}));
+        const dictPath = path.join(process.cwd(), process.env.KUROMOJI_DICT_DIRECTORY || "");
+        console.log(`DictPath: ${dictPath}`);
+        await kuroshiro.init(new KuromojiAnalyzer({dictPath}));
         result = await kuroshiro.convert(sentence, {mode:"furigana", to:"hiragana"});
     } catch(error) {
         console.error(`Fail to add furigana: ${error}`);
