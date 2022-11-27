@@ -1,4 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import Kuroshiro from "kuroshiro";
+import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
+import path from "path";
+
+const KUROMOJI_DICTIONARY_DIR = 'private/kuromoji/dict';
+export const config = {
+    unstable_includeFiles: [KUROMOJI_DICTIONARY_DIR],
+};
 
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
 const WANIKANI_API_URL: string = 'https://api.wanikani.com/v2';
@@ -8,7 +16,22 @@ const WANIKANI_USER_ENDPOINT: string = `${WANIKANI_API_URL}/user`;
 export type Sentence = {
     en: string,
     ja: string,
+    furiganaHTML?: string,
 };
+
+const convertToFuriganaHTML = async (sentence: string) => {
+    let result;
+    try {
+        const kuroshiro = new Kuroshiro();
+        const dictPath = path.join(process.cwd(), KUROMOJI_DICTIONARY_DIR);
+        await kuroshiro.init(new KuromojiAnalyzer({dictPath}));
+        result = await kuroshiro.convert(sentence, {mode:"furigana", to:"hiragana"});
+    } catch(error) {
+        console.error(`Fail to add furigana: ${error}`);
+    }
+    return result;
+}
+
 
 const getRandomInt = (min: number, max: number) => {
     min = Math.ceil(min);
@@ -110,6 +133,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     try {
         const data = await (shouldFetchFromWaniKani ? fetchFromWaniKani(waniKaniAPIKey) : fetchFromSheetson());
+        if (data.ja) {
+            data.furiganaHTML = await convertToFuriganaHTML(data.ja);
+        }
         res.status(200).json(data);
     } catch (error) {
         const errorString: string = error as string;

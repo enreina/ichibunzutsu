@@ -8,16 +8,21 @@ import Button from '@mui/material/Button';
 import {useState} from 'react';
 import { CssBaseline } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { useSentence } from '../libs/sentence';
+import { useSentence, JapaneseSentenceElement } from '../libs/sentence';
 import SettingsDialog from '../components/SettingsDialog';
 import type { SettingsType } from '../components/SettingsDialog';
 import useSavedSettings from '../libs/hooks/useSavedSettings';
 
 const Home: NextPage = () => {
-  const [isEnglishVisible, setIsEnglishVisible] = useState<Boolean>(false);
+  const [isFuriganaVisible, setIsFuriganaVisible] = useState<boolean>(false);
+  const [isEnglishVisible, setIsEnglishVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
   const {isWaniKaniEnabled, waniKaniAPIKey} = savedSettings || {};
   const {sentence, isLoading, isError, refetch} = useSentence(waniKaniAPIKey, isWaniKaniEnabled);
+
+  const showFuriganaButtonOnClick: () => void = () => {
+    setIsFuriganaVisible(true);
+  };
 
   const showEnglishButtonOnClick: () => void = () => {
     setIsEnglishVisible(true);
@@ -26,6 +31,7 @@ const Home: NextPage = () => {
   const refetchSentence = () => {
     refetch();
     setIsEnglishVisible(false);
+    setIsFuriganaVisible(false);
   };
 
   const errorRetryHandler = () => {
@@ -56,9 +62,14 @@ const Home: NextPage = () => {
       <Paper sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
         {sentenceIsLoaded && (
           <>
-            <Typography component="h1" variant="h4" align="center">{sentence['ja']}</Typography>
+            <Typography component="h1" variant="h4" align="center"><JapaneseSentenceElement sentence={sentence} showFurigana={isFuriganaVisible} /></Typography>
+            {!isFuriganaVisible && (
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Button onClick={showFuriganaButtonOnClick} variant="contained">Show Furigana</Button>
+              </Box>
+            )}
             {isEnglishVisible && <Typography variant="h5" align="center">{sentence['en']}</Typography>}
-            {!isEnglishVisible && (
+            {(isFuriganaVisible && !isEnglishVisible) && (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button onClick={showEnglishButtonOnClick} variant="contained">Show English</Button>
               </Box>
