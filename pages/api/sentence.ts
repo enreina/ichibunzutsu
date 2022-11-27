@@ -4,7 +4,7 @@ import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 import path from "path";
 
 export const config = {
-    unstable_includeFiles: ["node_modules/kuromoji/dict"],
+    unstable_includeFiles: ['private/kuromoji/dict'],
 };
 
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
@@ -22,8 +22,7 @@ const convertToFuriganaHTML = async (sentence: string) => {
     let result;
     try {
         const kuroshiro = new Kuroshiro();
-        const dictPath = path.join(process.cwd(), "node_modules/kuromoji/dict");
-        console.log(`DictPath: ${dictPath}`);
+        const dictPath = path.join(process.cwd(), "private/kuromoji/dict");
         await kuroshiro.init(new KuromojiAnalyzer({dictPath}));
         result = await kuroshiro.convert(sentence, {mode:"furigana", to:"hiragana"});
     } catch(error) {
