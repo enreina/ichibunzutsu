@@ -24,6 +24,14 @@ If you want to be able to use the app without a WaniKani account, you'd need to 
 
 Note that the sentences from the sample spreadsheet are downloaded from [Tatoeba](https://tatoeba.org).
 
+## Download dictionary files
+To enable furigana feature, the app depends on [kuroshiro](https://github.com/hexenq/kuroshiro) and [kuromoji](https://github.com/takuyaa/kuromoji.js) which uses these [dictionary files](https://github.com/takuyaa/kuromoji.js/tree/master/dict).
+Download the dictionary files to your machine with the donwload dictionary script:
+```
+./download-dictionary.sh
+```
+The files should be downloaded to the `/dict` dictionary or the project root.
+
 ## Running the Web App Locally
 Run the web server:
 ```
