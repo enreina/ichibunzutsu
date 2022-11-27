@@ -21,7 +21,8 @@ const convertToFuriganaHTML = async (sentence: string) => {
         const kuroshiro = new Kuroshiro();
         const dictPath = path.join(process.cwd(), process.env.KUROMOJI_DICT_DIRECTORY || "");
         console.log(`DictPath: ${dictPath}`);
-        await fs.readFile(dictPath + "/base.dat.gz", "binary");
+        const dictionaryFiles = await fs.readdir(dictPath, "binary");
+        console.log(dictionaryFiles);
         await kuroshiro.init(new KuromojiAnalyzer({dictPath}));
         result = await kuroshiro.convert(sentence, {mode:"furigana", to:"hiragana"});
     } catch(error) {
