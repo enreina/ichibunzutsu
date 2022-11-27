@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "yum install wget && mkdir dict && wget -O dict/base.dat.gz https://unpkg.com/kuromoji@0.1.2/dict/base.dat.gz && next build",
+    "build": "./download-dictionary.sh && next build",
     "start": "next start",
     "lint": "next lint"
   },
