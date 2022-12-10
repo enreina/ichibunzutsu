@@ -14,15 +14,10 @@ import type { SettingsType } from '../components/SettingsDialog';
 import useSavedSettings from '../libs/hooks/useSavedSettings';
 
 const Home: NextPage = () => {
-  const [isFuriganaVisible, setIsFuriganaVisible] = useState<boolean>(false);
   const [isEnglishVisible, setIsEnglishVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
   const {isWaniKaniEnabled, waniKaniAPIKey} = savedSettings || {};
   const {sentence, isLoading, isError, refetch} = useSentence(waniKaniAPIKey, isWaniKaniEnabled);
-
-  const showFuriganaButtonOnClick: () => void = () => {
-    setIsFuriganaVisible(true);
-  };
 
   const showEnglishButtonOnClick: () => void = () => {
     setIsEnglishVisible(true);
@@ -31,7 +26,6 @@ const Home: NextPage = () => {
   const refetchSentence = () => {
     refetch();
     setIsEnglishVisible(false);
-    setIsFuriganaVisible(false);
   };
 
   const errorRetryHandler = () => {
@@ -62,18 +56,16 @@ const Home: NextPage = () => {
       <Paper sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
         {sentenceIsLoaded && (
           <>
-            <Typography component="h1" variant="h4" align="center"><JapaneseSentenceElement sentence={sentence} showFurigana={isFuriganaVisible} /></Typography>
-            {!isFuriganaVisible && (
-              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button onClick={showFuriganaButtonOnClick} variant="contained">Show Furigana</Button>
-              </Box>
-            )}
+            <Typography component="h1" variant="h4" align="center"><JapaneseSentenceElement sentence={sentence} /></Typography>
             {isEnglishVisible && <Typography variant="h5" align="center">{sentence['en']}</Typography>}
-            {(isFuriganaVisible && !isEnglishVisible) && (
+            {!isEnglishVisible && (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button onClick={showEnglishButtonOnClick} variant="contained">Show English</Button>
               </Box>
             )}
+            <Box sx={{ fontStyle: 'italic', marginTop: 2, display: 'flex', justifyContent: 'center' }}>
+              <Typography variant="caption">Hover or click on any kanji to show furigana</Typography>
+            </Box>
           </>
         )}
         {(isLoading || (!savedSettings)) && (
