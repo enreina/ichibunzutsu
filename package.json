@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.10.4",
     "@fontsource/roboto": "^4.5.8",
     "@mui/material": "^5.10.9",
+    "html-react-parser": "^3.0.4",
     "kuroshiro": "^1.2.0",
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
     "next": "13.0.2",

@@ -1,5 +1,6 @@
 import useSWRImmutable from "swr/immutable";
 import type {Sentence} from "../pages/api/sentence";
+import parse, {HTMLReactParserOptions, Element, domToReact} from 'html-react-parser';
 
 const SENTENCE_API_ENDPOINT: string = "/api/sentence";
 
@@ -36,8 +37,28 @@ export const useSentence:
 };
 
 export const JapaneseSentenceElement = ({sentence, showFurigana = true} : {sentence: Sentence, showFurigana?: boolean}) => {
-    if (showFurigana && sentence.furiganaHTML) {
-        return <div dangerouslySetInnerHTML={{__html: sentence.furiganaHTML}}></div>;
+    const parseFuriganaOptions: HTMLReactParserOptions = {
+        replace: domNode => {
+            if (domNode instanceof Element && domNode.name === 'rt') {
+                return <rt className={showFurigana ? 'show-furigana' : 'hide-furigana'}>
+                    {domToReact(domNode.children, parseFuriganaOptions)}
+                    <style jsx>{`
+                        .show-furigana {
+                            opacity: 1;
+                        }
+                        .hide-furigana {
+                            opacity: 0;
+                        }
+                    `}</style>
+                </rt>
+            }
+        }
+    }
+
+    if (sentence.furiganaHTML) {
+        return <>
+            {parse(sentence.furiganaHTML, parseFuriganaOptions)}
+        </>;
     } else {
         return <>{sentence.ja}</>;
     }
