@@ -52,9 +52,16 @@ export type SettingsType = {
   },
 };
 
-export default function SettingsDialog({isOpen, onSubmit}: {isOpen: boolean, onSubmit: (settings: SettingsType) => void}) {
+export default function SettingsDialog({isOpen, onSubmit, isWaniKaniEnabled:  propsIsWaniKaniEnabled, waniKaniAPIKey: propsWaniKaniAPIKey}: 
+  {
+    isOpen: boolean, 
+    onSubmit: (settings: SettingsType) => void, 
+    isWaniKaniEnabled?: boolean, 
+    waniKaniAPIKey?: string
+  }) {
   const [settings, setSettings] = useState<SettingsType>({
-    isWaniKaniEnabled: false,
+    isWaniKaniEnabled: propsIsWaniKaniEnabled || false,
+    validableAPIKey: propsWaniKaniAPIKey ? {value: propsWaniKaniAPIKey, isValid: isValidAPIKey(propsWaniKaniAPIKey), errorMessage: ""} : undefined,
   });
 
   const onWaniKaniIntegrationChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,18 +110,6 @@ export default function SettingsDialog({isOpen, onSubmit}: {isOpen: boolean, onS
 
   const proceedButtonOnClick = () => {
     onSubmit(settings);
-
-    if (isWaniKaniEnabled) {
-      // clear state
-      setSettings({
-        isWaniKaniEnabled, 
-        validableAPIKey: {
-          value: "",
-          isValid: false,
-          errorMessage: "",
-        },
-      });
-    }
   }
 
   return (

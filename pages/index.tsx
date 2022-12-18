@@ -12,10 +12,12 @@ import { useSentence, JapaneseSentenceElement } from '../libs/sentence';
 import SettingsDialog from '../components/SettingsDialog';
 import type { SettingsType } from '../components/SettingsDialog';
 import useSavedSettings from '../libs/hooks/useSavedSettings';
+import Grid from '@mui/material/Grid';
 
 const Home: NextPage = () => {
   const [isEnglishVisible, setIsEnglishVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(!savedSettings);
   const {isWaniKaniEnabled, waniKaniAPIKey} = savedSettings || {};
   const {sentence, isLoading, isError, refetch} = useSentence(waniKaniAPIKey, isWaniKaniEnabled);
 
@@ -38,7 +40,12 @@ const Home: NextPage = () => {
       isWaniKaniEnabled: settings.isWaniKaniEnabled,
       waniKaniAPIKey: settings.validableAPIKey?.value,
     });
+    setIsSettingsOpen(false);
   };
+
+  const openSettings = () => {
+    setIsSettingsOpen(true);
+  }
 
   const sentenceIsLoaded = !isLoading && savedSettings && sentence;
 
@@ -50,8 +57,17 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <CssBaseline />
-      <Typography sx={{marginTop: 4}} variant="body2" color="text.secondary" align="center">１文ずつ</Typography>
-      <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
+
+      <Grid container spacing={2}>
+        <Grid item xs={4}></Grid>
+        <Grid item xs={4}>
+          <Typography sx={{marginTop: 4}} variant="body2" color="text.secondary" align="center">１文ずつ</Typography>
+          <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Button sx={{textTransform: 'none', marginTop: 4, float: 'right'}} variant="text" onClick={openSettings}>Settings</Button>
+        </Grid>
+      </Grid>
 
       <Paper sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
         {sentenceIsLoaded && (
@@ -89,7 +105,7 @@ const Home: NextPage = () => {
         </Box>
       )}
 
-      <SettingsDialog isOpen={!savedSettings} onSubmit={settingsSubmitHandler} />
+      <SettingsDialog isOpen={isSettingsOpen} onSubmit={settingsSubmitHandler} isWaniKaniEnabled={savedSettings?.isWaniKaniEnabled} waniKaniAPIKey={savedSettings?.waniKaniAPIKey} />
     </Container>
   );
 };
