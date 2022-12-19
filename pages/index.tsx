@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import { CssBaseline } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useSentence, JapaneseSentenceElement } from '../libs/sentence';
@@ -13,13 +13,23 @@ import SettingsDialog from '../components/SettingsDialog';
 import type { SettingsType } from '../components/SettingsDialog';
 import useSavedSettings from '../libs/hooks/useSavedSettings';
 import Grid from '@mui/material/Grid';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
   const [isEnglishVisible, setIsEnglishVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
-  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(!savedSettings);
   const {isWaniKaniEnabled, waniKaniAPIKey} = savedSettings || {};
   const {sentence, isLoading, isError, refetch} = useSentence(waniKaniAPIKey, isWaniKaniEnabled);
+  const router = useRouter();
+  const shouldOpenSettings = !!router.query.settings;
+
+  useEffect(() => {
+    if (!savedSettings) {
+      router.push("?settings=1", "/settings");
+    }
+  }, [savedSettings]);
+
 
   const showEnglishButtonOnClick: () => void = () => {
     setIsEnglishVisible(true);
@@ -40,12 +50,12 @@ const Home: NextPage = () => {
       isWaniKaniEnabled: settings.isWaniKaniEnabled,
       waniKaniAPIKey: settings.validableAPIKey?.value,
     });
-    setIsSettingsOpen(false);
+    router.push("/");
   };
 
-  const openSettings = () => {
-    setIsSettingsOpen(true);
-  }
+  const closeSettingsHandler = () => {
+    router.push("/");
+  };
 
   const sentenceIsLoaded = !isLoading && savedSettings && sentence;
 
@@ -65,7 +75,7 @@ const Home: NextPage = () => {
           <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
         </Grid>
         <Grid item xs={4}>
-          <Button sx={{textTransform: 'none', marginTop: 4, float: 'right'}} variant="text" onClick={openSettings}>Settings</Button>
+          <Link href="?settings=1" as="/settings"><Button sx={{textTransform: 'none', marginTop: 4, float: 'right'}} variant="text">Settings</Button></Link>
         </Grid>
       </Grid>
 
@@ -105,7 +115,12 @@ const Home: NextPage = () => {
         </Box>
       )}
 
-      <SettingsDialog isOpen={isSettingsOpen} onSubmit={settingsSubmitHandler} isWaniKaniEnabled={savedSettings?.isWaniKaniEnabled} waniKaniAPIKey={savedSettings?.waniKaniAPIKey} />
+      <SettingsDialog 
+        onClose={closeSettingsHandler} 
+        isOpen={shouldOpenSettings} 
+        onSubmit={settingsSubmitHandler} 
+        isWaniKaniEnabled={savedSettings?.isWaniKaniEnabled} 
+        waniKaniAPIKey={savedSettings?.waniKaniAPIKey} />
     </Container>
   );
 };

@@ -52,12 +52,13 @@ export type SettingsType = {
   },
 };
 
-export default function SettingsDialog({isOpen, onSubmit, isWaniKaniEnabled:  propsIsWaniKaniEnabled, waniKaniAPIKey: propsWaniKaniAPIKey}: 
+export default function SettingsDialog({isOpen, onClose, onSubmit, isWaniKaniEnabled:  propsIsWaniKaniEnabled, waniKaniAPIKey: propsWaniKaniAPIKey}: 
   {
     isOpen: boolean, 
+    onClose?: () => void,
     onSubmit: (settings: SettingsType) => void, 
     isWaniKaniEnabled?: boolean, 
-    waniKaniAPIKey?: string
+    waniKaniAPIKey?: string,
   }) {
   const [settings, setSettings] = useState<SettingsType>({
     isWaniKaniEnabled: propsIsWaniKaniEnabled || false,
@@ -113,7 +114,7 @@ export default function SettingsDialog({isOpen, onSubmit, isWaniKaniEnabled:  pr
   }
 
   return (
-      <Dialog open={isOpen}>
+      <Dialog open={isOpen} onClose={onClose}>
       <DialogTitle>Settings</DialogTitle>
       <DialogContent>
         <FormControlLabel control={<Switch checked={isWaniKaniEnabled} onChange={onWaniKaniIntegrationChanged} />} label="WaniKani integration is disabled" />
