@@ -60,10 +60,11 @@ export default function SettingsDialog({isOpen, onClose, onSubmit, isWaniKaniEna
     isWaniKaniEnabled?: boolean, 
     waniKaniAPIKey?: string,
   }) {
-  const [settings, setSettings] = useState<SettingsType>({
+  const initialSettings = {
     isWaniKaniEnabled: propsIsWaniKaniEnabled || false,
     validableAPIKey: propsWaniKaniAPIKey ? {value: propsWaniKaniAPIKey, isValid: isValidAPIKey(propsWaniKaniAPIKey), errorMessage: ""} : undefined,
-  });
+  };
+  const [settings, setSettings] = useState<SettingsType>(initialSettings);
 
   const onWaniKaniIntegrationChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSettings(prevState => {
@@ -113,11 +114,17 @@ export default function SettingsDialog({isOpen, onClose, onSubmit, isWaniKaniEna
     onSubmit(settings);
   }
 
+  const onDialogClose = () => {
+    if (onClose) {onClose()};
+    // return state to initial settings
+    setSettings(initialSettings);
+  };
+
   return (
-      <Dialog open={isOpen} onClose={onClose}>
+      <Dialog open={isOpen} onClose={onDialogClose}>
       <DialogTitle>Settings</DialogTitle>
       <DialogContent>
-        <FormControlLabel control={<Switch checked={isWaniKaniEnabled} onChange={onWaniKaniIntegrationChanged} />} label="WaniKani integration is disabled" />
+        <FormControlLabel control={<Switch checked={isWaniKaniEnabled} onChange={onWaniKaniIntegrationChanged} />} label={`WaniKani integration is ${isWaniKaniEnabled ? 'enabled' : 'disabled'}`} />
         <SettingsDialogTextGroup isWaniKaniEnabled={isWaniKaniEnabled} />  
         {isWaniKaniEnabled && <TextField
           autoFocus
