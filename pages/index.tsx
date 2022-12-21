@@ -119,8 +119,7 @@ const Home: NextPage = () => {
         onClose={closeSettingsHandler} 
         isOpen={shouldOpenSettings} 
         onSubmit={settingsSubmitHandler} 
-        isWaniKaniEnabled={savedSettings?.isWaniKaniEnabled} 
-        waniKaniAPIKey={savedSettings?.waniKaniAPIKey} />
+        savedSettings={savedSettings} />
     </Container>
   );
 };

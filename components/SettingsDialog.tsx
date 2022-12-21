@@ -6,10 +6,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Link from '@mui/material/Link';
-import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { useState } from "react";
+import { SavedSettings } from '../libs/hooks/useSavedSettings';
 
 const WANIKANI_TOKEN_LINK = "https://www.wanikani.com/settings/personal_access_tokens";
 const TATOEBA_LINK = "https://tatoeba.org";
@@ -36,13 +36,6 @@ const SettingsDialogTextGroup = ({isWaniKaniEnabled}: {isWaniKaniEnabled: boolea
   </>);
 };
 
-const COPYWRITING = {
-  "settings_dialog_text_1_wanikani_disabled": `If you have a WaniKani account, enabling the WaniKani integration above is recommended.`,
-  "settings_dialog_text_2_wanikani_disabled": `Otherwise, you can still proceed and practice reading with Japanese sentences from the Tatoeba project.`,
-  "settings_dialog_text_1_wanikani_enabled": `You will practice reading Japanese sentences tailored to your WaniKani level. `,
-  "settings_dialog_text_2_wanikani_enabled": `Please provide your API Key of your WaniKani account. You can get your key here.`,
-};
-
 export type SettingsType = {
   isWaniKaniEnabled: boolean,
   validableAPIKey?: {
@@ -52,17 +45,16 @@ export type SettingsType = {
   },
 };
 
-export default function SettingsDialog({isOpen, onClose, onSubmit, isWaniKaniEnabled:  propsIsWaniKaniEnabled, waniKaniAPIKey: propsWaniKaniAPIKey}: 
+export default function SettingsDialog({isOpen, onClose, onSubmit, savedSettings}: 
   {
     isOpen: boolean, 
     onClose?: () => void,
     onSubmit: (settings: SettingsType) => void, 
-    isWaniKaniEnabled?: boolean, 
-    waniKaniAPIKey?: string,
+    savedSettings?: SavedSettings | null,
   }) {
   const initialSettings = {
-    isWaniKaniEnabled: propsIsWaniKaniEnabled || false,
-    validableAPIKey: propsWaniKaniAPIKey ? {value: propsWaniKaniAPIKey, isValid: isValidAPIKey(propsWaniKaniAPIKey), errorMessage: ""} : undefined,
+    isWaniKaniEnabled: savedSettings?.isWaniKaniEnabled || false,
+    validableAPIKey: savedSettings?.waniKaniAPIKey ? {value: savedSettings?.waniKaniAPIKey, isValid: isValidAPIKey(savedSettings?.waniKaniAPIKey), errorMessage: ""} : undefined,
   };
   const [settings, setSettings] = useState<SettingsType>(initialSettings);
 
