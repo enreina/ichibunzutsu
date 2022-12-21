@@ -5,6 +5,7 @@ const localStorageKey = "SAVED_SETTINGS";
 export type SavedSettings = {
     isWaniKaniEnabled?: boolean,
     waniKaniAPIKey?: string,
+    isDarkModeEnabled?: boolean,
 };
 
 // Reference: https://usehooks.com/useLocalStorage/

@@ -50,6 +50,7 @@ const Home: NextPage = () => {
       ...savedSettings,
       isWaniKaniEnabled: settings.isWaniKaniEnabled,
       waniKaniAPIKey: settings.validableAPIKey?.value,
+      isDarkModeEnabled: settings.isDarkModeEnabled,
     });
     router.push("/");
   };

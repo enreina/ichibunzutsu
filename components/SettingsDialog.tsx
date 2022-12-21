@@ -46,6 +46,7 @@ export type SettingsType = {
     isValid: boolean,
     errorMessage: string,
   },
+  isDarkModeEnabled: boolean,
 };
 
 export default function SettingsDialog({isOpen, onClose, onSubmit, savedSettings}: 
@@ -58,6 +59,7 @@ export default function SettingsDialog({isOpen, onClose, onSubmit, savedSettings
   const initialSettings = {
     isWaniKaniEnabled: savedSettings?.isWaniKaniEnabled || false,
     validableAPIKey: savedSettings?.waniKaniAPIKey ? {value: savedSettings?.waniKaniAPIKey, isValid: isValidAPIKey(savedSettings?.waniKaniAPIKey), errorMessage: ""} : undefined,
+    isDarkModeEnabled: savedSettings?.isDarkModeEnabled || false,
   };
   const [settings, setSettings] = useState<SettingsType>(initialSettings);
   const {palette: {mode: themeMode}} = useTheme();
@@ -106,7 +108,13 @@ export default function SettingsDialog({isOpen, onClose, onSubmit, savedSettings
     }));
   };
 
-  const {isWaniKaniEnabled, validableAPIKey} = settings;
+  const onDarkModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    themeContext.toggleThemeMode();
+    setSettings(prevState => ({
+      ...prevState,
+      isDarkModeEnabled: event.target.checked,
+    }));
+  };
 
   const proceedButtonOnClick = () => {
     onSubmit(settings);
@@ -117,6 +125,9 @@ export default function SettingsDialog({isOpen, onClose, onSubmit, savedSettings
     // return state to initial settings
     setSettings(initialSettings);
   };
+
+
+  const {isWaniKaniEnabled, validableAPIKey} = settings;
 
   return (
       <Dialog open={isOpen} onClose={onDialogClose}>
@@ -151,7 +162,7 @@ export default function SettingsDialog({isOpen, onClose, onSubmit, savedSettings
         </Typography>
         <FormControlLabel 
           control={<Switch checked={isDarkModeEnabled} 
-          onChange={themeContext.toggleThemeMode} />}
+          onChange={onDarkModeChange} />}
           label={`Dark mode is ${isDarkModeEnabled ? 'enabled' : 'disabled'}`} />
       </DialogContent>
       <DialogActions>
