@@ -16,10 +16,12 @@ export const ThemeContextProvider: React.FC<{children?: React.ReactNode}> = ({ch
         setThemeMode(prevValue => prevValue === 'light' ? 'dark' : 'light');
     };
 
+    // saved settings should have higher priority than system preference
     useEffect(() => {
-        // saved settings has higher priority than system preference
         if ((savedSettings?.isDarkModeEnabled === undefined && prefersDarkMode) || savedSettings?.isDarkModeEnabled) {
             setThemeMode('dark');
+        } else {
+            setThemeMode('light');
         }
     }, [savedSettings?.isDarkModeEnabled, prefersDarkMode]);
 
