@@ -9,7 +9,7 @@ import Link from '@mui/material/Link';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { useState } from "react";
-import { SavedSettings } from '../libs/hooks/useSavedSettings';
+import type { SavedSettings } from '../libs/hooks/useSavedSettings';
 
 const WANIKANI_TOKEN_LINK = "https://www.wanikani.com/settings/personal_access_tokens";
 const TATOEBA_LINK = "https://tatoeba.org";
