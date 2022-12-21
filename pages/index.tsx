@@ -47,8 +47,10 @@ const Home: NextPage = () => {
 
   const settingsSubmitHandler = (settings: SettingsType) => {
     setSavedSettings({
+      ...savedSettings,
       isWaniKaniEnabled: settings.isWaniKaniEnabled,
       waniKaniAPIKey: settings.validableAPIKey?.value,
+      isDarkModeEnabled: settings.isDarkModeEnabled,
     });
     router.push("/");
   };
