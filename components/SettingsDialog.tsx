@@ -8,8 +8,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Link from '@mui/material/Link';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import type { SavedSettings } from '../libs/hooks/useSavedSettings';
+import { useTheme } from '@mui/material/styles';
+import { Divider, Typography } from '@mui/material';
+import ThemeContext from './ThemeContext';
 
 const WANIKANI_TOKEN_LINK = "https://www.wanikani.com/settings/personal_access_tokens";
 const TATOEBA_LINK = "https://tatoeba.org";
@@ -57,7 +60,10 @@ export default function SettingsDialog({isOpen, onClose, onSubmit, savedSettings
     validableAPIKey: savedSettings?.waniKaniAPIKey ? {value: savedSettings?.waniKaniAPIKey, isValid: isValidAPIKey(savedSettings?.waniKaniAPIKey), errorMessage: ""} : undefined,
   };
   const [settings, setSettings] = useState<SettingsType>(initialSettings);
-
+  const {palette: {mode: themeMode}} = useTheme();
+  const isDarkModeEnabled = themeMode === 'dark';
+  const themeContext = useContext(ThemeContext);
+  
   const onWaniKaniIntegrationChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSettings(prevState => {
       const isValidableAPIKey = prevState.validableAPIKey ?? {
@@ -116,7 +122,13 @@ export default function SettingsDialog({isOpen, onClose, onSubmit, savedSettings
       <Dialog open={isOpen} onClose={onDialogClose}>
       <DialogTitle>Settings</DialogTitle>
       <DialogContent>
-        <FormControlLabel control={<Switch checked={isWaniKaniEnabled} onChange={onWaniKaniIntegrationChanged} />} label={`WaniKani integration is ${isWaniKaniEnabled ? 'enabled' : 'disabled'}`} />
+        <Typography variant="subtitle1" gutterBottom>
+          Sentence Source
+        </Typography>
+        <FormControlLabel 
+          control={<Switch checked={isWaniKaniEnabled} 
+          onChange={onWaniKaniIntegrationChanged} />} 
+          label={`WaniKani integration is ${isWaniKaniEnabled ? 'enabled' : 'disabled'}`} />
         <SettingsDialogTextGroup isWaniKaniEnabled={isWaniKaniEnabled} />  
         {isWaniKaniEnabled && <TextField
           autoFocus
@@ -133,6 +145,14 @@ export default function SettingsDialog({isOpen, onClose, onSubmit, savedSettings
           onBlur={onAPIKeyTextFieldBlur}
           inputProps={{maxLength: API_KEY_LENGTH}}
         />}
+        <Divider sx={{marginBottom: 2}} />
+        <Typography variant="subtitle1" gutterBottom>
+          Appearance
+        </Typography>
+        <FormControlLabel 
+          control={<Switch checked={isDarkModeEnabled} 
+          onChange={themeContext.toggleThemeMode} />}
+          label={`Dark mode is ${isDarkModeEnabled ? 'enabled' : 'disabled'}`} />
       </DialogContent>
       <DialogActions>
         <Button disabled={settings.isWaniKaniEnabled && !(validableAPIKey?.isValid)} onClick={proceedButtonOnClick}>Save Settings</Button>

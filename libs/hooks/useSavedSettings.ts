@@ -3,7 +3,7 @@ import {useState} from 'react';
 const localStorageKey = "SAVED_SETTINGS";
 
 export type SavedSettings = {
-    isWaniKaniEnabled: boolean,
+    isWaniKaniEnabled?: boolean,
     waniKaniAPIKey?: string,
 };
 
