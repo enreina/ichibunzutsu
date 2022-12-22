@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model sentences {
+  uuid                 String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  created_at           DateTime?        @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
+  wanikani_level       Int?             @db.SmallInt
+  wanikani_subject_id  BigInt?
+  tatoeba_ja_id        BigInt?          @unique
+  tatoeba_en_id        BigInt?
+  sentence_ja          String?
+  sentence_en          String?
+  sentence_ja_furigana String?
+  source_url           String?
+  source               sentence_source?
+  updated_at           DateTime?        @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
+}
+
+enum sentence_source {
+  wanikani
+  tatoeba
+}

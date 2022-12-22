@@ -9,7 +9,7 @@ import Link from '@mui/material/Link';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { useContext, useState } from "react";
-import type { SavedSettings } from '../libs/hooks/useSavedSettings';
+import type { SavedSettings } from '../lib/hooks/useSavedSettings';
 import { useTheme } from '@mui/material/styles';
 import { Divider, Typography } from '@mui/material';
 import ThemeContext from './ThemeContext';
