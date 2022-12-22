@@ -1,7 +1,7 @@
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { createContext, useEffect, useMemo, useState } from "react";
-import useSavedSettings from "../libs/hooks/useSavedSettings";
+import useSavedSettings from "../lib/hooks/useSavedSettings";
 
 const ThemeContext = createContext({
     toggleThemeMode: () => {},
