@@ -15,6 +15,7 @@ import useSavedSettings from '../lib/hooks/useSavedSettings';
 import Grid from '@mui/material/Grid';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import AboutDialog from '../components/AboutDialog';
 
 const Home: NextPage = () => {
   const [isEnglishVisible, setIsEnglishVisible] = useState<boolean>(false);
@@ -23,6 +24,7 @@ const Home: NextPage = () => {
   const {sentence, isLoading, isError, refetch} = useSentence(waniKaniAPIKey, isWaniKaniEnabled);
   const router = useRouter();
   const shouldOpenSettings = !!router.query.settings;
+  const shouldOpenAbout = !!router.query.about;
 
   useEffect(() => {
     if (!savedSettings) {
@@ -55,7 +57,7 @@ const Home: NextPage = () => {
     router.push("/");
   };
 
-  const closeSettingsHandler = () => {
+  const closeDialogHandler = () => {
     router.push("/");
   };
 
@@ -78,6 +80,7 @@ const Home: NextPage = () => {
         </Grid>
         <Grid item xs={4}>
           <Link href="?settings=1" as="/settings"><Button sx={{textTransform: 'none', marginTop: 4, float: 'right'}} variant="text">Settings</Button></Link>
+          <Link href="?about=1" as="/about"><Button sx={{textTransform: 'none', marginTop: 4, float: 'right'}} variant="text">About</Button></Link>
         </Grid>
       </Grid>
 
@@ -118,10 +121,12 @@ const Home: NextPage = () => {
       )}
 
       <SettingsDialog 
-        onClose={closeSettingsHandler} 
+        onClose={closeDialogHandler} 
         isOpen={shouldOpenSettings} 
         onSubmit={settingsSubmitHandler} 
         savedSettings={savedSettings} />
+
+      <AboutDialog isOpen={shouldOpenAbout} onClose={closeDialogHandler}/>
     </Container>
   );
 };
