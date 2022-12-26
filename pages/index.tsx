@@ -101,7 +101,7 @@ const Home: NextPage = () => {
 
               {/* App Name in Middle */}
               <Box sx={{flexGrow: 1, display:"flex", flexDirection: "column"}}>
-                <Typography variant="body2" color="text.secondary" align="center">１分ずつ</Typography>
+                <Typography variant="body2" color="text.secondary" align="center">一文ずつ</Typography>
                 <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
               </Box>
 
