@@ -6,19 +6,31 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {useState, useEffect} from 'react';
-import { AppBar, CssBaseline, IconButton, Toolbar } from '@mui/material';
+import { AppBar, CssBaseline, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useSentence, JapaneseSentenceElement } from '../lib/sentence';
 import SettingsDialog from '../components/SettingsDialog';
 import type { SettingsType } from '../components/SettingsDialog';
 import useSavedSettings from '../lib/hooks/useSavedSettings';
-import Grid from '@mui/material/Grid';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import AboutDialog from '../components/AboutDialog';
 import MenuIcon from '@mui/icons-material/Menu';
 
+type NavItemType = {
+  key: string,
+  text: string,
+  href: string, 
+  as: string,
+};
+
+const navItems: NavItemType[] = [
+  {key: "about", text: "About", href: "?about=1", as: "/about"},
+  {key: "settings", text: "Settings", href: "?settings=1", as:"/settings"},
+];
+
 const Home: NextPage = () => {
+  const [isDrawerMenuOpen, setIsDrawerMenuOpen] = useState<boolean>(false);
   const [isEnglishVisible, setIsEnglishVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
   const {isWaniKaniEnabled, waniKaniAPIKey} = savedSettings || {};
@@ -62,6 +74,10 @@ const Home: NextPage = () => {
     router.push("/");
   };
 
+  const navItemClickHandler = (item: NavItemType) => {
+    router.push(item.href, item.as);
+  };
+
   const sentenceIsLoaded = !isLoading && savedSettings && sentence;
 
   return (
@@ -76,24 +92,31 @@ const Home: NextPage = () => {
       <AppBar color="transparent" elevation={0} component="nav">
           <Container sx={{marginTop: 3}} maxWidth="lg">
             <Toolbar disableGutters>
+              {/* To ensure the center box is centered */}
               <Box sx={{flexGrow: 0, display:{xs: "none", md: "flex"}, visibility: "hidden"}}>
                 <Link href="?about=1" as="/about"><Button sx={{textTransform: 'none'}} variant="text" disabled>About</Button></Link>
                 <Link href="?settings=1" as="/settings"><Button sx={{textTransform: 'none'}} variant="text" disabled>Settings</Button></Link>
               </Box>
               <Box sx={{flexGrow: 0, display:{xs: "flex", md: "none"}, visibility: "hidden"}}><IconButton><MenuIcon/></IconButton></Box>
+
+              {/* App Name in Middle */}
               <Box sx={{flexGrow: 1, display:"flex", flexDirection: "column"}}>
                 <Typography variant="body2" color="text.secondary" align="center">１分ずつ</Typography>
                 <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
               </Box>
+
+              {/* Menu Icon only on mobile view */}
               <Box sx={{flexGrow: 0, display:{xs: "flex", md: "none"}}}>
                 <IconButton 
                   aria-label="open menu bar"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
-                  color="inherit">
+                  color="inherit"
+                  onClick={() => setIsDrawerMenuOpen(true)}>
                   <MenuIcon/>
                 </IconButton>
               </Box>
+              {/* Menu on dekstop view */}
               <Box sx={{flexGrow: 0, display:{xs: "none", md: "flex"}}}>
                 <Link href="?about=1" as="/about"><Button sx={{textTransform: 'none'}} variant="text">About</Button></Link>
                 <Link href="?settings=1" as="/settings"><Button sx={{textTransform: 'none'}} variant="text">Settings</Button></Link>
@@ -101,6 +124,30 @@ const Home: NextPage = () => {
             </Toolbar>
           </Container>
       </AppBar>
+
+      <Box component="nav" onClick={() => setIsDrawerMenuOpen(false)}>
+        <Drawer
+          anchor="right"
+          open={isDrawerMenuOpen}
+          variant="temporary"
+          ModalProps={{keepMounted: true}}
+          sx={{
+            display: { xs: 'block', md: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
+          }}>
+            <Box>
+            <List>
+              {navItems.map((item) => (
+                <ListItem key={item.key} disablePadding>
+                  <ListItemButton onClick={() => navItemClickHandler(item)} sx={{ textAlign: 'center' }}>
+                    <ListItemText primary={item.text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+            </Box>
+        </Drawer>
+      </Box>
 
       <Toolbar />
       <Paper sx={{ my: 4, p: { xs: 2, md: 3 }}}>
