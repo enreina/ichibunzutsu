@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {useState, useEffect} from 'react';
-import { CssBaseline } from '@mui/material';
+import { AppBar, CssBaseline, IconButton, Toolbar } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useSentence, JapaneseSentenceElement } from '../lib/sentence';
 import SettingsDialog from '../components/SettingsDialog';
@@ -16,6 +16,7 @@ import Grid from '@mui/material/Grid';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import AboutDialog from '../components/AboutDialog';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const Home: NextPage = () => {
   const [isEnglishVisible, setIsEnglishVisible] = useState<boolean>(false);
@@ -72,19 +73,37 @@ const Home: NextPage = () => {
       </Head>
       <CssBaseline />
 
-      <Grid container spacing={2}>
-        <Grid item xs={4}></Grid>
-        <Grid item xs={4}>
-          <Typography sx={{marginTop: 4}} variant="body2" color="text.secondary" align="center">１文ずつ</Typography>
-          <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Link href="?settings=1" as="/settings"><Button sx={{textTransform: 'none', marginTop: 4, float: 'right'}} variant="text">Settings</Button></Link>
-          <Link href="?about=1" as="/about"><Button sx={{textTransform: 'none', marginTop: 4, float: 'right'}} variant="text">About</Button></Link>
-        </Grid>
-      </Grid>
+      <AppBar color="transparent" elevation={0} component="nav">
+          <Container sx={{marginTop: 3}} maxWidth="lg">
+            <Toolbar disableGutters>
+              <Box sx={{flexGrow: 0, display:{xs: "none", md: "flex"}, visibility: "hidden"}}>
+                <Link href="?about=1" as="/about"><Button sx={{textTransform: 'none'}} variant="text" disabled>About</Button></Link>
+                <Link href="?settings=1" as="/settings"><Button sx={{textTransform: 'none'}} variant="text" disabled>Settings</Button></Link>
+              </Box>
+              <Box sx={{flexGrow: 0, display:{xs: "flex", md: "none"}, visibility: "hidden"}}><IconButton><MenuIcon/></IconButton></Box>
+              <Box sx={{flexGrow: 1, display:"flex", flexDirection: "column"}}>
+                <Typography variant="body2" color="text.secondary" align="center">１分ずつ</Typography>
+                <Typography variant="body2" color="text.secondary" align="center">Ichi Bun Zutsu</Typography>
+              </Box>
+              <Box sx={{flexGrow: 0, display:{xs: "flex", md: "none"}}}>
+                <IconButton 
+                  aria-label="open menu bar"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  color="inherit">
+                  <MenuIcon/>
+                </IconButton>
+              </Box>
+              <Box sx={{flexGrow: 0, display:{xs: "none", md: "flex"}}}>
+                <Link href="?about=1" as="/about"><Button sx={{textTransform: 'none'}} variant="text">About</Button></Link>
+                <Link href="?settings=1" as="/settings"><Button sx={{textTransform: 'none'}} variant="text">Settings</Button></Link>
+              </Box>
+            </Toolbar>
+          </Container>
+      </AppBar>
 
-      <Paper sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 }}}>
+      <Toolbar />
+      <Paper sx={{ my: 4, p: { xs: 2, md: 3 }}}>
         {sentenceIsLoaded && (
           <>
             <Typography component="h1" variant="h4" align="center"><JapaneseSentenceElement sentence={sentence} /></Typography>

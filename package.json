@@ -12,6 +12,7 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.10.9",
     "@prisma/client": "^4.8.0",
     "html-react-parser": "^3.0.4",
