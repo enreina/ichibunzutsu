@@ -45,7 +45,7 @@ If WaniKani fetching is enabled, the sentence would be fetched from WaniKani API
 ## Setting up Prisma
 The web app is being migrated to use Prisma & Postgres database as sentence source. For development, set the database url & shadow url in your `.env.local` (see `.env.sample`). Then run the following command when synching the Prisma schema with the database:
 ```
-yarn dotenv -e .env.local prisma migrate dev
+yarn dotenv -e .env.local prisma db push
 ```
 
 To generate the prisma client run:
