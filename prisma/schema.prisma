@@ -8,7 +8,7 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model Sentences {
+model Sentence {
   uuid                 String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   createdAt            DateTime?        @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
   wanikaniLevel        Int?             @db.SmallInt

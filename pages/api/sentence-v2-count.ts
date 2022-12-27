@@ -3,7 +3,7 @@ import prisma from "../../lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<number | {error: string}>) {
     try {
-        const countSentence = await prisma.sentences.count();
+        const countSentence = await prisma.sentence.count();
         res.status(200).json(countSentence);
     } catch (error) {
         const errorString: string = error as string;
