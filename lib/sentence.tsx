@@ -1,5 +1,5 @@
 import useSWRImmutable from "swr/immutable";
-import type {Sentence} from "../pages/api/sentence";
+import type {Sentence} from "../types/sentence";
 import {useState} from "react";
 import parse, {HTMLReactParserOptions, domToReact, Element, Text} from 'html-react-parser';
 import {ElementType} from "domelementtype";

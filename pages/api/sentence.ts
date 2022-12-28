@@ -2,17 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import Kuroshiro from "kuroshiro";
 import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
 import path from "path";
+import { Sentence } from "../../types/sentence";
+import { getRandomInt } from "../../utils/numbers";
+import { WANIKANI_SUBJECT_ENDPOINT, WANIKANI_USER_ENDPOINT } from "../../utils/constants";
 
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
-const WANIKANI_API_URL: string = 'https://api.wanikani.com/v2';
-const WANIKANI_SUBJECT_ENDPOINT: string = `${WANIKANI_API_URL}/subjects`;
-const WANIKANI_USER_ENDPOINT: string = `${WANIKANI_API_URL}/user`;
-
-export type Sentence = {
-    en: string,
-    ja: string,
-    furiganaHTML?: string,
-};
 
 // Temporary workaround for: Error: ENOENT: no such file or directory
 // When calling initializing KuroMoji Analyzer
@@ -33,13 +27,6 @@ const convertToFuriganaHTML = async (sentence: string) => {
     }
     return result;
 }
-
-
-const getRandomInt = (min: number, max: number) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-};
 
 const fetchFromSheetson = () => {
     const params = {
