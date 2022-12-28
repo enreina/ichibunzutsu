@@ -1,32 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import Kuroshiro from "kuroshiro";
-import KuromojiAnalyzer from "kuroshiro-analyzer-kuromoji";
-import path from "path";
 import { Sentence } from "../../types/sentence";
 import { getRandomInt } from "../../utils/numbers";
 import { WANIKANI_SUBJECT_ENDPOINT, WANIKANI_USER_ENDPOINT } from "../../utils/constants";
+import { convertToFuriganaHTML } from "../../lib/kuroshiro";
 
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
-
-// Temporary workaround for: Error: ENOENT: no such file or directory
-// When calling initializing KuroMoji Analyzer
-// See: https://github.com/vercel/next.js/issues/8251#issuecomment-960792582
-export const config = {
-    unstable_includeFiles: ['dict'],
-};
-
-const convertToFuriganaHTML = async (sentence: string) => {
-    let result;
-    try {
-        const kuroshiro = new Kuroshiro();
-        const dictPath = path.join(process.cwd(), "dict");
-        await kuroshiro.init(new KuromojiAnalyzer({dictPath}));
-        result = await kuroshiro.convert(sentence, {mode:"furigana", to:"hiragana"});
-    } catch(error) {
-        console.error(`Fail to add furigana: ${error}`);
-    }
-    return result;
-}
 
 const fetchFromSheetson = () => {
     const params = {
