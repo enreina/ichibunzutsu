@@ -32,9 +32,9 @@ const navItems: NavItemType[] = [
 
 const NavigationLinks = ({navItems}: {navItems: NavItemType[]}) => {
   return <>
-    {navItems.map((navItem) => (
-      <Link href={navItem.href} as={navItem.as}>
-        <Button sx={{textTransform: 'none'}} variant="text">{navItem.text}</Button>
+    {navItems.map((item) => (
+      <Link key={item.key} href={item.href} as={item.as}>
+        <Button sx={{textTransform: 'none'}} variant="text">{item.text}</Button>
       </Link>
     ))}
   </>;
