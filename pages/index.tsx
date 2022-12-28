@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import {useState, useEffect} from 'react';
 import { AppBar, CssBaseline, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { useSentence, JapaneseSentenceElement } from '../lib/sentence';
+import { useSentence } from '../lib/hooks/useSentence';
 import SettingsDialog from '../components/SettingsDialog';
 import type { SettingsType } from '../components/SettingsDialog';
 import useSavedSettings from '../lib/hooks/useSavedSettings';
@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import AboutDialog from '../components/AboutDialog';
 import MenuIcon from '@mui/icons-material/Menu';
+import { JapaneseSentenceElement } from '../components/JapaneseSentenceElement';
 
 type NavItemType = {
   key: string,
@@ -28,6 +29,28 @@ const navItems: NavItemType[] = [
   {key: "about", text: "About", href: "?about=1", as: "/about"},
   {key: "settings", text: "Settings", href: "?settings=1", as:"/settings"},
 ];
+
+const NavigationLinks = ({navItems}: {navItems: NavItemType[]}) => {
+  return <>
+    {navItems.map((item) => (
+      <Link key={item.key} href={item.href} as={item.as}>
+        <Button sx={{textTransform: 'none'}} variant="text">{item.text}</Button>
+      </Link>
+    ))}
+  </>;
+};
+
+const NavigationList = ({navItems, onNavigationItemClick}: {navItems: NavItemType[], onNavigationItemClick: (navItem: NavItemType) => void}) => {
+  return <List>
+    {navItems.map((item) => (
+      <ListItem key={item.key} disablePadding>
+        <ListItemButton onClick={() => onNavigationItemClick(item)} sx={{ textAlign: 'center' }}>
+          <ListItemText primary={item.text} />
+        </ListItemButton>
+      </ListItem>
+    ))}
+  </List>;
+};
 
 const Home: NextPage = () => {
   const [isDrawerMenuOpen, setIsDrawerMenuOpen] = useState<boolean>(false);
@@ -94,8 +117,7 @@ const Home: NextPage = () => {
             <Toolbar disableGutters>
               {/* To ensure the center box is centered */}
               <Box sx={{flexGrow: 0, display:{xs: "none", md: "flex"}, visibility: "hidden"}}>
-                <Link href="?about=1" as="/about"><Button sx={{textTransform: 'none'}} variant="text" disabled>About</Button></Link>
-                <Link href="?settings=1" as="/settings"><Button sx={{textTransform: 'none'}} variant="text" disabled>Settings</Button></Link>
+                <NavigationLinks navItems={navItems} />
               </Box>
               <Box sx={{flexGrow: 0, display:{xs: "flex", md: "none"}, visibility: "hidden"}}><IconButton><MenuIcon/></IconButton></Box>
 
@@ -118,8 +140,7 @@ const Home: NextPage = () => {
               </Box>
               {/* Menu on dekstop view */}
               <Box sx={{flexGrow: 0, display:{xs: "none", md: "flex"}}}>
-                <Link href="?about=1" as="/about"><Button sx={{textTransform: 'none'}} variant="text">About</Button></Link>
-                <Link href="?settings=1" as="/settings"><Button sx={{textTransform: 'none'}} variant="text">Settings</Button></Link>
+                <NavigationLinks navItems={navItems} />
               </Box>
             </Toolbar>
           </Container>
@@ -136,15 +157,7 @@ const Home: NextPage = () => {
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 240 },
           }}>
             <Box>
-            <List>
-              {navItems.map((item) => (
-                <ListItem key={item.key} disablePadding>
-                  <ListItemButton onClick={() => navItemClickHandler(item)} sx={{ textAlign: 'center' }}>
-                    <ListItemText primary={item.text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
+              <NavigationList navItems={navItems} onNavigationItemClick={navItemClickHandler} />
             </Box>
         </Drawer>
       </Box>
