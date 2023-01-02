@@ -18,7 +18,7 @@
     "html-react-parser": "^3.0.4",
     "kuroshiro": "^1.2.0",
     "kuroshiro-analyzer-kuromoji": "^1.1.0",
-    "next": "13.0.2",
+    "next": "^13.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "swr": "^1.3.0"
