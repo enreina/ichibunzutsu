@@ -1,4 +1,5 @@
 # Ichi Bun Zutsu
+
 A web app for Japanese reading practice by presenting a Japanese sentence every day.
 
 ![](app-demo.gif)
@@ -6,16 +7,21 @@ A web app for Japanese reading practice by presenting a Japanese sentence every 
 I started this project as a "rehab" project for getting back into programming. While the main goal is to learn NextJS and TypeScript, the web app is something that's relevant to my current "endeavour", which is learning the Japanese language.
 
 ## Useful Links
+
 - [GitHub Repository](https://github.com/enreina/ichibunzutsu)
 - [Figma Design](https://www.figma.com/file/13XJUSltNujMuN8H8Rq6h4/Ichi-Bun-Zutsu?node-id=2%3A3)
 - [Notion Notes](https://www.notion.so/Pet-Project-Ichi-Bun-Zutsu-49a98f061b4a4a698fa351a3034845ca)
 
 ## Setup Environment Variables
+
 Copy `.env.sample` to `.env.local`
+
 ```bash
 cp .env.sample .env.local
 ```
+
 If you want to be able to use the app without a WaniKani account, you'd need to setup a Google Sheet for fetching the sentence:
+
 1. Make a copy of this Google Sheet spreadsheet: https://docs.google.com/spreadsheets/d/1Ejvindpn_eqY3tZHbFxjHeqlyNdiaJP-XOjZ89JA1EE/edit?usp=sharing
 2. Sign up a https://sheetson.com account (login with your gmail account)
 3. Share your copy of the spreadsheet to google@sheetson.com
@@ -25,34 +31,45 @@ If you want to be able to use the app without a WaniKani account, you'd need to 
 Note that the sentences from the sample spreadsheet are downloaded from [Tatoeba](https://tatoeba.org).
 
 ## Download dictionary files
+
 To enable furigana feature, the app depends on [kuroshiro](https://github.com/hexenq/kuroshiro) and [kuromoji](https://github.com/takuyaa/kuromoji.js) which uses these [dictionary files](https://github.com/takuyaa/kuromoji.js/tree/master/dict).
 Download the dictionary files to your machine with the donwload dictionary script:
+
 ```
 ./download-dictionary.sh
 ```
+
 The files should be downloaded to the `/dict` dictionary or the project root.
 
 ## Running the Web App Locally
+
 Run the web server:
+
 ```
 yarn dev
 ```
-Open http://localhost:3000 with your browser. When the app is opened for the first time, a settings dialog would be presented to enable or disable WaniKani integration. If WaniKani fetching is enabled, you'll be asked to input your WaniKani API Key. Input your API Key, and after the page loads, you should see a Japanese sentence on the screen. 
+
+Open http://localhost:3000 with your browser. When the app is opened for the first time, a settings dialog would be presented to enable or disable WaniKani integration. If WaniKani fetching is enabled, you'll be asked to input your WaniKani API Key. Input your API Key, and after the page loads, you should see a Japanese sentence on the screen.
 
 ### Why do I need to input a WaniKani API key?
+
 If WaniKani fetching is enabled, the sentence would be fetched from WaniKani API through the `/v2/subjects` endpoint (see [WaniKani API Reference](https://docs.api.wanikani.com/20170710/#get-all-subjects) for more details). You need to sign up on [WaniKani](https://wanikani.com/) to get the API Key. Free account works as well as the app currently only fetches sentences from the first 3 levels (which are free). Once you are signed in to WaniKani, you can get the token [here](https://www.wanikani.com/settings/personal_access_tokens).
 
 ## Setting up Prisma
+
 The web app is being migrated to use Prisma & Postgres database as sentence source. For development, set the database url & shadow url in your `.env.local` (see `.env.sample`). Then run the following command when synching the Prisma schema with the database:
+
 ```
 yarn dotenv -e .env.local prisma db push
 ```
 
 To generate the prisma client run:
+
 ```
 yarn prisma generate
 ```
------
+
+---
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
