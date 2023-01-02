@@ -37,3 +37,8 @@ next-env.d.ts
 
 # kuromoji dictionary files
 /dict/
+
+# e2e test report
+/test-results/
+/playwright-report/
+/playwright/.cache/
