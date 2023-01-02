@@ -223,17 +223,30 @@ const Home: NextPage = () => {
       <Paper sx={{ my: 4, p: { xs: 2, md: 3 } }}>
         {sentenceIsLoaded && (
           <>
-            <Typography component="h1" variant="h4" align="center">
+            <Typography
+              data-testid="japanese-sentence"
+              component="h1"
+              variant="h4"
+              align="center"
+            >
               <JapaneseSentenceElement sentence={sentence} />
             </Typography>
             {isEnglishVisible && (
-              <Typography variant="h5" align="center">
+              <Typography
+                data-testid="english-sentence"
+                variant="h5"
+                align="center"
+              >
                 {sentence['en']}
               </Typography>
             )}
             {!isEnglishVisible && (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button onClick={showEnglishButtonOnClick} variant="contained">
+                <Button
+                  data-testid="show-english-button"
+                  onClick={showEnglishButtonOnClick}
+                  variant="contained"
+                >
                   Show English
                 </Button>
               </Box>
