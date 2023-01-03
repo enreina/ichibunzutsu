@@ -25,7 +25,7 @@ If you want to be able to use the app without a WaniKani account, you'd need to 
 1. Make a copy of this Google Sheet spreadsheet: https://docs.google.com/spreadsheets/d/1Ejvindpn_eqY3tZHbFxjHeqlyNdiaJP-XOjZ89JA1EE/edit?usp=sharing
 2. Sign up a https://sheetson.com account (login with your gmail account)
 3. Share your copy of the spreadsheet to google@sheetson.com
-4. Get the spreadsheet id as described in: https://docs.sheetson.com/getting-started/#getting-spreadsheet-id-and-sheet-name. Set the `SHEETSON_SPREADHEET_ID` in `.env.local` with this spreadsheet id.
+4. Get the spreadsheet id as described in: https://docs.sheetson.com/getting-started/#getting-spreadsheet-id-and-sheet-name. Set the `SHEETSON_SPREADSHEET_ID` in `.env.local` with this spreadsheet id.
 5. Get your Sheetson API Key from https://sheetson.com/console, and set it as value of the `SHEETSON_API_KEY` variable on your `.env.local`
 
 Note that the sentences from the sample spreadsheet are downloaded from [Tatoeba](https://tatoeba.org).
@@ -68,6 +68,20 @@ To generate the prisma client run:
 ```
 yarn prisma generate
 ```
+
+## Run E2E Test
+
+To run E2E (end-to-end) tests:
+
+```
+yarn test:e2e
+```
+
+We use [Playwright](https://playwright.dev/docs/intro) to write our test, and a CI setup has been integrated on [GitHub Actions](https://docs.github.com/en/actions). The following is a list of files related to E2E testing:
+
+- [tests/e2e/](./tests/e2e/): contains E2E test files
+- [playwright.config.ts](./playwright.config.ts): Playwright configuration file
+- [.github/workflows/playwright.yml](./.github/workflows/playwright.yml): GitHub Actions Workflow configuration file
 
 ---
 
