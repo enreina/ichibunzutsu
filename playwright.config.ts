@@ -40,7 +40,7 @@ const config: PlaywrightTestConfig = {
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `SHEETSON_API_KEY=${process.env.SHEETSON_API_KEY} SHEETSON_SPREADHEET_ID=${process.env.SHEETSON_SPREADSHEET_ID} yarn dev`,
+    command: `yarn dev`,
     url: BASE_URL,
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
