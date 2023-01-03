@@ -69,6 +69,20 @@ To generate the prisma client run:
 yarn prisma generate
 ```
 
+## Run E2E Test
+
+To run E2E (end-to-end) tests:
+
+```
+yarn test:e2e
+```
+
+We use [Playwright](https://playwright.dev/docs/intro) to write our test, and a CI setup has been integrated on [GitHub Actions](https://docs.github.com/en/actions). The following is a list of files related to E2E testing:
+
+- [tests/e2e/](./tests/e2e/): contains E2E test files
+- [playwright.config.ts](./playwright.config.ts): Playwright configuration file
+- [.github/workflows/playwright.yml](./.github/workflows/playwright.yml): GitHub Actions Workflow configuration file
+
 ---
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
