@@ -21,7 +21,7 @@ jobs:
         run: yarn playwright test
         env:
           SHEETSON_API_KEY: ${{ secrets.SHEETSON_API_KEY }}
-          SHEETSON_SPREADHEET_ID: ${{ secrets.SHEETSON_SPREADSHEET_ID }}
+          SHEETSON_SPREADSHEET_ID: ${{ secrets.SHEETSON_SPREADSHEET_ID }}
       - uses: actions/upload-artifact@v3
         if: always()
         with:

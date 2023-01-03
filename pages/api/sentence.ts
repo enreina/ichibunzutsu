@@ -11,7 +11,7 @@ const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
 
 const fetchFromSheetson = () => {
   const params = {
-    spreadsheetId: process.env.SHEETSON_SPREADHEET_ID || '',
+    spreadsheetId: process.env.SHEETSON_SPREADSHEET_ID || '',
     apiKey: process.env.SHEETSON_API_KEY || '',
   };
   const urlSearchParams = new URLSearchParams(params);
