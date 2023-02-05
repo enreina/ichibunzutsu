@@ -2371,6 +2371,11 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+wanakana@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/wanakana/-/wanakana-5.0.2.tgz#b42c940c124eb8b5980563672d7f2c6be64cfdff"
+  integrity sha512-eYTezpLYXCr+gmVmgBBYQP7A7WJphvhyx1PkrHaMrnExTiMPrgTgFLSJgo75DnZf1Wy0lA2nukNVJg7Ptvx9zA==
+
 which-boxed-primitive@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/which-boxed-primitive/-/which-boxed-primitive-1.0.2.tgz#13757bc89b209b049fe5d86430e21cf40a89a8e6"

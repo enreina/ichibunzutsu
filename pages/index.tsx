@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEventHandler } from 'react';
 import { CssBaseline } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useSentence } from '../lib/hooks/useSentence';
@@ -16,6 +16,7 @@ import { useRouter } from 'next/router';
 import AboutDialog from '../components/AboutDialog';
 import { JapaneseSentenceElement } from '../components/JapaneseSentenceElement';
 import { NavigationBar, NavItemType } from '../components/NavigationBar';
+import AnswerInput from '../components/AnswerInput';
 
 const navItems: NavItemType[] = [
   { key: 'about', text: 'About', href: '?about=1', as: '/about' },
@@ -30,6 +31,7 @@ const Home: NextPage = () => {
     waniKaniAPIKey,
     isWaniKaniEnabled
   );
+  const [answer, setAnswer] = useState<string>('');
   const router = useRouter();
   const shouldOpenSettings = !!router.query.settings;
   const shouldOpenAbout = !!router.query.about;
@@ -72,6 +74,12 @@ const Home: NextPage = () => {
     router.push(item.href, item.as);
   };
 
+  const answerInputChangeHandler: ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = ({ target: { value } }) => {
+    setAnswer(value);
+  };
+
   const sentenceIsLoaded = !isLoading && savedSettings && sentence;
 
   return (
@@ -104,6 +112,11 @@ const Home: NextPage = () => {
             >
               <JapaneseSentenceElement sentence={sentence} />
             </Typography>
+            <AnswerInput
+              fullWidth
+              variant="standard"
+              onChange={answerInputChangeHandler}
+            />
             {isEnglishVisible && (
               <Typography
                 data-testid="english-sentence"
