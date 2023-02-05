@@ -20,12 +20,12 @@ const getKuroshiroInstance = async () => {
   return kuroshiroInstance;
 };
 
-export const convertToFuriganaHTML = async (sentence: string) => {
-  let result;
+export const convertToHiragana = async (sentence: string, furiganaHTMLMode: boolean) => {
+  let result: string | undefined;
   try {
     const kuroshiro = await getKuroshiroInstance();
     result = await kuroshiro.convert(sentence, {
-      mode: 'furigana',
+      mode: furiganaHTMLMode ? 'furigana' : 'normal',
       to: 'hiragana',
     });
   } catch (error) {

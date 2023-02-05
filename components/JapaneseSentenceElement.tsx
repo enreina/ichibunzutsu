@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import parse, {
   HTMLReactParserOptions,
-  domToReact,
   Element,
   Text,
 } from 'html-react-parser';

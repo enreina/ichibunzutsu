@@ -5,11 +5,11 @@ import {
   WANIKANI_SUBJECT_ENDPOINT,
   WANIKANI_USER_ENDPOINT,
 } from '../../utils/constants';
-import { convertToFuriganaHTML } from '../../lib/kuroshiro';
+import { convertToHiragana } from '../../lib/kuroshiro';
 
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
 
-const fetchFromSheetson = () => {
+const fetchFromSheetson = (): Promise<Sentence> => {
   const params = {
     spreadsheetId: process.env.SHEETSON_SPREADSHEET_ID || '',
     apiKey: process.env.SHEETSON_API_KEY || '',
@@ -43,7 +43,7 @@ const fetchFromSheetson = () => {
     });
 };
 
-const fetchFromWaniKani = (apiKey: string | null) => {
+const fetchFromWaniKani = (apiKey: string | null): Promise<Sentence> => {
   if (!apiKey) {
     return Promise.reject('API Key is required');
   }
@@ -121,7 +121,11 @@ export default async function handler(
       ? fetchFromWaniKani(waniKaniAPIKey)
       : fetchFromSheetson());
     if (data.ja) {
-      data.furiganaHTML = await convertToFuriganaHTML(data.ja);
+      const [furiganaHTML, hiragana] = await Promise.all([
+        convertToHiragana(data.ja, true), 
+        convertToHiragana(data.ja, false)]);
+      data.furiganaHTML = furiganaHTML;
+      data.hiragana = hiragana;
     }
     res.status(200).json(data);
   } catch (error) {
