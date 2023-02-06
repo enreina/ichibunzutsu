@@ -7,39 +7,56 @@ import parse, {
 import { ElementType } from 'domelementtype';
 import { Sentence } from '../types/sentence';
 
+type FuriganaMode = 'hover' | 'show' | 'hide';
+
 const KanjiFuriganaElement = ({
   kanji,
   furigana,
+  mode = 'hover',
 }: {
   kanji: string;
   furigana: string;
+  hoverMode?: boolean;
+  mode?: FuriganaMode;
 }) => {
-  const [shouldShowFurigana, setShouldShowFurigana] = useState<boolean>(false);
-  const [alwaysShowFurigana, setAlwaysShowFurigana] = useState<boolean>(false);
-  const showFurigana = () => {
-    if (!alwaysShowFurigana) {
+  const [shouldShowFurigana, setShouldShowFurigana] = useState<boolean>(
+    mode === 'show'
+  );
+  const [alwaysShowFurigana, setAlwaysShowFurigana] = useState<boolean>(
+    mode === 'show'
+  );
+  const onMouseEnter = () => {
+    if (mode === 'hover' && !alwaysShowFurigana) {
       setShouldShowFurigana(true);
     }
   };
-  const hideFurigana = () => {
-    if (!alwaysShowFurigana) {
+  const onMouseLeave = () => {
+    if (mode === 'hover' && !alwaysShowFurigana) {
       setShouldShowFurigana(false);
     }
   };
-  const toggleFurigana = () => {
+  const onClick = () => {
     // When the kanji is clicked, we always show the furigana unless it's clicked again
-    setAlwaysShowFurigana((prevValue) => !prevValue);
+    if (mode === 'hover') {
+      setAlwaysShowFurigana((prevValue) => !prevValue);
+    }
   };
 
   return (
     <ruby
-      onMouseEnter={showFurigana}
-      onMouseLeave={hideFurigana}
-      onClick={toggleFurigana}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onClick={onClick}
     >
       {kanji}
       <rp>(</rp>
-      <rt className={shouldShowFurigana ? 'show-furigana' : 'hide-furigana'}>
+      <rt
+        className={
+          shouldShowFurigana || mode === 'show'
+            ? 'show-furigana'
+            : 'hide-furigana'
+        }
+      >
         {furigana}
       </rt>
       <rp>)</rp>
@@ -58,7 +75,9 @@ const KanjiFuriganaElement = ({
   );
 };
 
-const parseFuriganaOptions: HTMLReactParserOptions = {
+const getParseFuriganaOptions: (
+  furiganaMode?: FuriganaMode
+) => HTMLReactParserOptions = (furiganaMode) => ({
   replace: (domNode) => {
     if (domNode instanceof Element && domNode.name === 'ruby') {
       let kanji = '';
@@ -83,18 +102,27 @@ const parseFuriganaOptions: HTMLReactParserOptions = {
         }
       }
 
-      return <KanjiFuriganaElement kanji={kanji} furigana={furigana} />;
+      return (
+        <KanjiFuriganaElement
+          kanji={kanji}
+          furigana={furigana}
+          mode={furiganaMode}
+        />
+      );
     }
   },
-};
+});
 
 export const JapaneseSentenceElement = ({
   sentence,
+  furiganaMode,
 }: {
   sentence: Sentence;
+  furiganaMode?: FuriganaMode;
 }) => {
   if (sentence.furiganaHTML) {
-    return <>{parse(sentence.furiganaHTML, parseFuriganaOptions)}</>;
+    const parseOptions = getParseFuriganaOptions(furiganaMode);
+    return <>{parse(sentence.furiganaHTML, parseOptions)}</>;
   } else {
     return <>{sentence.ja}</>;
   }

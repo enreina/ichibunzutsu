@@ -15,7 +15,9 @@ export default function AnswerInput({
   const extendedOnChange: ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement
   > = (e) => {
-    setConvertedValue(toKana(e.target.value, { IMEMode: true }));
+    const convertedValue = toKana(e.target.value, { IMEMode: true });
+    setConvertedValue(convertedValue);
+    if (inputRef.current) inputRef.current.value = convertedValue;
     if (onChange) onChange(e);
   };
 

@@ -24,7 +24,7 @@ const navItems: NavItemType[] = [
 ];
 
 const Home: NextPage = () => {
-  const [isEnglishVisible, setIsEnglishVisible] = useState<boolean>(false);
+  const [isAnswerVisible, setIsAnswerVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
   const { isWaniKaniEnabled, waniKaniAPIKey } = savedSettings || {};
   const { sentence, isLoading, isError, refetch } = useSentence(
@@ -42,13 +42,13 @@ const Home: NextPage = () => {
     }
   }, [savedSettings]);
 
-  const showEnglishButtonOnClick: () => void = () => {
-    setIsEnglishVisible(true);
+  const showAnswerButtonOnClick: () => void = () => {
+    setIsAnswerVisible(true);
   };
 
   const refetchSentence = () => {
     refetch();
-    setIsEnglishVisible(false);
+    setIsAnswerVisible(false);
   };
 
   const errorRetryHandler = () => {
@@ -102,89 +102,95 @@ const Home: NextPage = () => {
       />
 
       <Paper sx={{ my: 4, p: { xs: 2, md: 3 } }}>
-        {sentenceIsLoaded && (
-          <>
-            <Typography
-              data-testid="japanese-sentence"
-              component="h1"
-              variant="h4"
-              align="center"
-            >
-              <JapaneseSentenceElement sentence={sentence} />
-            </Typography>
-            {!isEnglishVisible && (
-              <AnswerInput
-                fullWidth
-                autoComplete="off"
-                autoFocus={true}
-                variant="standard"
-                onChange={answerInputChangeHandler}
-                sx={{ my: 3 }}
-                placeholder="Type the reading here"
-                inputProps={{
-                  sx: {
-                    textAlign: 'center',
-                    fontSize: '24px',
-                  },
-                }}
-              />
-            )}
-            {isEnglishVisible && (
-              <>
-                <Typography
-                  sx={{
-                    my: 3,
-                    borderBottom: 1,
-                    fontSize: '24px',
-                    height: '1.4375em',
-                    pt: '4px',
-                    pb: '5px',
+        <form>
+          {sentenceIsLoaded && (
+            <>
+              <Typography
+                data-testid="japanese-sentence"
+                component="h1"
+                variant="h4"
+                align="center"
+              >
+                <JapaneseSentenceElement
+                  sentence={sentence}
+                  furiganaMode={isAnswerVisible ? 'show' : 'hide'}
+                />
+              </Typography>
+              {!isAnswerVisible && (
+                <AnswerInput
+                  fullWidth
+                  autoComplete="off"
+                  autoFocus={true}
+                  variant="standard"
+                  onChange={answerInputChangeHandler}
+                  sx={{ my: 3 }}
+                  placeholder="Type the reading here"
+                  inputProps={{
+                    sx: {
+                      textAlign: 'center',
+                      fontSize: '24px',
+                    },
                   }}
-                  component="h2"
-                  variant="h5"
-                  align="center"
-                >
-                  {answer}
-                </Typography>
-                <Typography
-                  data-testid="english-sentence"
-                  variant="h5"
-                  align="center"
-                >
-                  {sentence['en']}
-                </Typography>
-              </>
-            )}
-            {!isEnglishVisible && (
+                />
+              )}
+              {isAnswerVisible && (
+                <>
+                  <Typography
+                    sx={{
+                      my: 3,
+                      borderBottom: 1,
+                      fontSize: '24px',
+                      height: '1.4375em',
+                      pt: '4px',
+                      pb: '5px',
+                    }}
+                    component="h2"
+                    variant="h5"
+                    align="center"
+                  >
+                    {answer}
+                  </Typography>
+                  <Typography
+                    data-testid="english-sentence"
+                    variant="h5"
+                    align="center"
+                  >
+                    {sentence['en']}
+                  </Typography>
+                </>
+              )}
+              {!isAnswerVisible && (
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Button
+                    type="submit"
+                    data-testid="show-english-button"
+                    onClick={showAnswerButtonOnClick}
+                    variant="contained"
+                  >
+                    Show Answer
+                  </Button>
+                </Box>
+              )}
+            </>
+          )}
+          {(isLoading || !savedSettings) && (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <CircularProgress />
+            </Box>
+          )}
+          {isError && savedSettings && (
+            <>
+              <Typography variant="h5" align="center">
+                Could not fetch sentence
+              </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button
-                  data-testid="show-english-button"
-                  onClick={showEnglishButtonOnClick}
-                  variant="contained"
-                >
-                  Show Answer
+                <Button variant="contained" onClick={errorRetryHandler}>
+                  Retry
                 </Button>
               </Box>
-            )}
-          </>
-        )}
-        {(isLoading || !savedSettings) && (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <CircularProgress />
-          </Box>
-        )}
-        {isError && savedSettings && (
-          <>
-            <Typography variant="h5" align="center">
-              Could not fetch sentence
-            </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Button variant="contained" onClick={errorRetryHandler}>
-                Retry
-              </Button>
-            </Box>
-          </>
-        )}
+            </>
+          )}
+        </form>
       </Paper>
 
       {sentenceIsLoaded && (
