@@ -157,6 +157,19 @@ const Home: NextPage = () => {
                   >
                     {sentence['en']}
                   </Typography>
+                  <Box
+                    sx={{
+                      fontStyle: 'italic',
+                      marginTop: 2,
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Typography variant="caption">
+                      Note: the readings are automatically generated and may
+                      have errors.
+                    </Typography>
+                  </Box>
                 </>
               )}
               {!isAnswerVisible && (
