@@ -112,19 +112,48 @@ const Home: NextPage = () => {
             >
               <JapaneseSentenceElement sentence={sentence} />
             </Typography>
-            <AnswerInput
-              fullWidth
-              variant="standard"
-              onChange={answerInputChangeHandler}
-            />
+            {!isEnglishVisible && (
+              <AnswerInput
+                fullWidth
+                autoComplete="off"
+                autoFocus={true}
+                variant="standard"
+                onChange={answerInputChangeHandler}
+                sx={{ my: 3 }}
+                placeholder="Type the reading here"
+                inputProps={{
+                  sx: {
+                    textAlign: 'center',
+                    fontSize: '24px',
+                  },
+                }}
+              />
+            )}
             {isEnglishVisible && (
-              <Typography
-                data-testid="english-sentence"
-                variant="h5"
-                align="center"
-              >
-                {sentence['en']}
-              </Typography>
+              <>
+                <Typography
+                  sx={{
+                    my: 3,
+                    borderBottom: 1,
+                    fontSize: '24px',
+                    height: '1.4375em',
+                    pt: '4px',
+                    pb: '5px',
+                  }}
+                  component="h2"
+                  variant="h5"
+                  align="center"
+                >
+                  {answer}
+                </Typography>
+                <Typography
+                  data-testid="english-sentence"
+                  variant="h5"
+                  align="center"
+                >
+                  {sentence['en']}
+                </Typography>
+              </>
             )}
             {!isEnglishVisible && (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -133,22 +162,10 @@ const Home: NextPage = () => {
                   onClick={showEnglishButtonOnClick}
                   variant="contained"
                 >
-                  Show English
+                  Show Answer
                 </Button>
               </Box>
             )}
-            <Box
-              sx={{
-                fontStyle: 'italic',
-                marginTop: 2,
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography variant="caption">
-                Hover or click on any kanji to show furigana
-              </Typography>
-            </Box>
           </>
         )}
         {(isLoading || !savedSettings) && (
