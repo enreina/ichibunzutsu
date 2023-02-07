@@ -49,6 +49,7 @@ const Home: NextPage = () => {
   const refetchSentence = () => {
     refetch();
     setIsAnswerVisible(false);
+    setAnswer('');
   };
 
   const errorRetryHandler = () => {

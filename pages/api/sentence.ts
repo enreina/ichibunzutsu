@@ -5,7 +5,7 @@ import {
   WANIKANI_SUBJECT_ENDPOINT,
   WANIKANI_USER_ENDPOINT,
 } from '../../utils/constants';
-import { convertToHiragana } from '../../lib/kuroshiro';
+import { convertToHiragana, tokenizeFurigana } from '../../lib/kuroshiro';
 
 const SHEETSON_URL: string = 'https://api.sheetson.com/v2/sheets/';
 
@@ -121,11 +121,9 @@ export default async function handler(
       ? fetchFromWaniKani(waniKaniAPIKey)
       : fetchFromSheetson());
     if (data.ja) {
-      const [furiganaHTML, hiragana] = await Promise.all([
-        convertToHiragana(data.ja, true), 
-        convertToHiragana(data.ja, false)]);
+      const furiganaHTML = await convertToHiragana(data.ja, true);
       data.furiganaHTML = furiganaHTML;
-      data.hiragana = hiragana;
+      data.furiganaTokens = tokenizeFurigana(furiganaHTML || "");
     }
     res.status(200).json(data);
   } catch (error) {
