@@ -14,7 +14,10 @@ import type { SettingsType } from '../components/SettingsDialog';
 import useSavedSettings from '../lib/hooks/useSavedSettings';
 import { useRouter } from 'next/router';
 import AboutDialog from '../components/AboutDialog';
-import { JapaneseSentenceElement } from '../components/JapaneseSentenceElement';
+import {
+  FuriganaMode,
+  JapaneseSentenceElement,
+} from '../components/JapaneseSentenceElement';
 import { NavigationBar, NavItemType } from '../components/NavigationBar';
 import AnswerInput from '../components/AnswerInput';
 
@@ -22,11 +25,24 @@ const navItems: NavItemType[] = [
   { key: 'about', text: 'About', href: '?about=1', as: '/about' },
   { key: 'settings', text: 'Settings', href: '?settings=1', as: '/settings' },
 ];
+const getFuriganaMode = (
+  isAnswerVisible: boolean,
+  isQuizModeEnabled: boolean
+): FuriganaMode => {
+  if (isQuizModeEnabled) {
+    return isAnswerVisible ? 'show' : 'hide';
+  }
+  return 'hover';
+};
 
 const Home: NextPage = () => {
   const [isAnswerVisible, setIsAnswerVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
-  const { isWaniKaniEnabled, waniKaniAPIKey } = savedSettings || {};
+  const {
+    isWaniKaniEnabled,
+    waniKaniAPIKey,
+    isQuizModeEnabled = false,
+  } = savedSettings || {};
   const { sentence, isLoading, isError, refetch } = useSentence(
     waniKaniAPIKey,
     isWaniKaniEnabled
@@ -63,8 +79,10 @@ const Home: NextPage = () => {
       isWaniKaniEnabled: settings.isWaniKaniEnabled,
       waniKaniAPIKey: settings.validableAPIKey?.value,
       isDarkModeEnabled: settings.isDarkModeEnabled,
+      isQuizModeEnabled: settings.isQuizModeEnabled,
     });
     router.push('/');
+    refetchSentence();
   };
 
   const closeDialogHandler = () => {
@@ -82,6 +100,7 @@ const Home: NextPage = () => {
   };
 
   const sentenceIsLoaded = !isLoading && savedSettings && sentence;
+  const furiganaMode = getFuriganaMode(isAnswerVisible, isQuizModeEnabled);
 
   return (
     <Container maxWidth="lg">
@@ -114,10 +133,10 @@ const Home: NextPage = () => {
               >
                 <JapaneseSentenceElement
                   sentence={sentence}
-                  furiganaMode={isAnswerVisible ? 'show' : 'hide'}
+                  furiganaMode={furiganaMode}
                 />
               </Typography>
-              {!isAnswerVisible && (
+              {isQuizModeEnabled && !isAnswerVisible && (
                 <AnswerInput
                   fullWidth
                   autoComplete="off"
@@ -139,20 +158,22 @@ const Home: NextPage = () => {
               )}
               {isAnswerVisible && (
                 <>
-                  <Typography
-                    sx={{
-                      my: 3,
-                      borderBottom: 1,
-                      fontSize: '24px',
-                      pt: '4px',
-                      pb: '5px',
-                    }}
-                    component="h2"
-                    variant="h5"
-                    align="center"
-                  >
-                    {answer}
-                  </Typography>
+                  {isQuizModeEnabled && (
+                    <Typography
+                      sx={{
+                        my: 3,
+                        borderBottom: 1,
+                        fontSize: '24px',
+                        pt: '4px',
+                        pb: '5px',
+                      }}
+                      component="h2"
+                      variant="h5"
+                      align="center"
+                    >
+                      {answer}
+                    </Typography>
+                  )}
                   <Typography
                     data-testid="english-sentence"
                     variant="h5"
@@ -165,11 +186,18 @@ const Home: NextPage = () => {
                       fontStyle: 'italic',
                       marginTop: 2,
                       display: 'flex',
+                      flexDirection: 'column',
                       justifyContent: 'center',
+                      textAlign: 'center',
                     }}
                   >
+                    {!isQuizModeEnabled && (
+                      <Typography variant="caption">
+                        Hover or click on any kanji to show furigana
+                      </Typography>
+                    )}
                     <Typography variant="caption">
-                      Note: the readings are automatically generated and may
+                      Note: the furigana are automatically generated and may
                       have errors.
                     </Typography>
                   </Box>

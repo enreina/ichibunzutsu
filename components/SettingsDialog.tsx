@@ -81,6 +81,7 @@ export type SettingsType = {
     errorMessage: string;
   };
   isDarkModeEnabled: boolean;
+  isQuizModeEnabled: boolean;
 };
 
 export default function SettingsDialog({
@@ -104,6 +105,7 @@ export default function SettingsDialog({
         }
       : undefined,
     isDarkModeEnabled: savedSettings?.isDarkModeEnabled || false,
+    isQuizModeEnabled: savedSettings?.isQuizModeEnabled || false,
   };
   const [settings, setSettings] = useState<SettingsType>(initialSettings);
   const {
@@ -173,6 +175,13 @@ export default function SettingsDialog({
     }));
   };
 
+  const onQuizModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSettings((prevState) => ({
+      ...prevState,
+      isQuizModeEnabled: event.target.checked,
+    }));
+  };
+
   const proceedButtonOnClick = () => {
     onSubmit(settings);
   };
@@ -185,7 +194,7 @@ export default function SettingsDialog({
     setSettings(initialSettings);
   };
 
-  const { isWaniKaniEnabled, validableAPIKey } = settings;
+  const { isWaniKaniEnabled, validableAPIKey, isQuizModeEnabled } = settings;
 
   return (
     <Dialog open={isOpen} onClose={onDialogClose}>
@@ -223,6 +232,19 @@ export default function SettingsDialog({
             inputProps={{ maxLength: API_KEY_LENGTH }}
           />
         )}
+        <Typography variant="subtitle1" gutterBottom>
+          Quiz Mode
+        </Typography>
+        <FormControlLabel
+          control={
+            <Switch checked={isQuizModeEnabled} onChange={onQuizModeChange} />
+          }
+          label={`Quiz mode is ${isQuizModeEnabled ? 'enabled' : 'disabled'}`}
+        />
+        <SettingsDialogText>
+          With the quiz mode enabled, you can practice by typing out the reading
+          before comparing to the correct reading.
+        </SettingsDialogText>
         <Divider sx={{ marginBottom: 2 }} />
         <Typography variant="subtitle1" gutterBottom>
           Appearance

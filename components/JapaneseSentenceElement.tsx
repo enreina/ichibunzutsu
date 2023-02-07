@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Sentence } from '../types/sentence';
 
-type FuriganaMode = 'hover' | 'show' | 'hide';
+export type FuriganaMode = 'hover' | 'show' | 'hide';
 
 const KanjiFuriganaElement = ({
   kanji,
