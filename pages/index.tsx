@@ -122,13 +122,16 @@ const Home: NextPage = () => {
                   autoComplete="off"
                   autoFocus={true}
                   variant="standard"
+                  multiline={true}
                   onChange={answerInputChangeHandler}
+                  onEnter={() => setIsAnswerVisible(true)}
                   sx={{ my: 3 }}
                   placeholder="Type the reading here"
                   inputProps={{
                     sx: {
                       textAlign: 'center',
                       fontSize: '24px',
+                      lineHeight: '32px',
                     },
                   }}
                 />
@@ -140,7 +143,6 @@ const Home: NextPage = () => {
                       my: 3,
                       borderBottom: 1,
                       fontSize: '24px',
-                      height: '1.4375em',
                       pt: '4px',
                       pb: '5px',
                     }}

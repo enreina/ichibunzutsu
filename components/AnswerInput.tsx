@@ -1,12 +1,19 @@
 import { TextField, TextFieldProps } from '@mui/material';
-import { ChangeEventHandler, useRef, useState } from 'react';
+import {
+  ChangeEventHandler,
+  KeyboardEventHandler,
+  useRef,
+  useState,
+} from 'react';
 import { toKana } from 'wanakana';
 
 export default function AnswerInput({
   value,
   onChange,
+  onEnter,
+  onKeyDown,
   ...props
-}: TextFieldProps) {
+}: TextFieldProps & { onEnter?: () => void }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [convertedValue, setConvertedValue] = useState<string>(
     toKana(value, { IMEMode: true })
@@ -21,10 +28,19 @@ export default function AnswerInput({
     if (onChange) onChange(e);
   };
 
+  const extendedOnKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (onEnter) onEnter();
+    }
+    if (onKeyDown) onKeyDown(e);
+  };
+
   return (
     <TextField
       inputRef={inputRef}
       onChange={extendedOnChange}
+      onKeyDown={extendedOnKeyDown}
       value={convertedValue}
       {...props}
     />
