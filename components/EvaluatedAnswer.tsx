@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { furiganaTokensToString, FuriganaTokenType } from '../lib/kuroshiro';
 import { ReactNode } from 'react';
 import { KanjiFuriganaElement } from './JapaneseSentenceElement';
+import { useTheme } from '@mui/material/styles';
 
 const HighlightedChars = styled.span(({ color }) => ({
   color,
@@ -15,21 +16,37 @@ export function EvaluatedUserAnswer({
   userAnswer: string;
   systemAnswer: string;
 }) {
+  const {
+    palette: {
+      success: { main: successColor },
+      error: { main: errorColor },
+    },
+  } = useTheme();
   const differences = diffChars(systemAnswer, userAnswer);
+  const completelyCorrect = differences.every(
+    ({ added, removed }) => !added && !removed
+  );
 
   return (
     <>
       {differences.map(({ value, added, removed }, idx) => {
         if (added) {
           return (
-            <HighlightedChars color={'red'} key={idx}>
+            <HighlightedChars color={errorColor} key={idx}>
               {value}
             </HighlightedChars>
           );
         } else if (removed) {
           return null;
         } else {
-          return value;
+          return (
+            <HighlightedChars
+              color={completelyCorrect ? successColor : undefined}
+              key={idx}
+            >
+              {value}
+            </HighlightedChars>
+          );
         }
       })}
     </>
@@ -43,6 +60,11 @@ export function EvaluatedSystemAnswer({
   userAnswer: string;
   systemAnswerTokens: FuriganaTokenType[];
 }) {
+  const {
+    palette: {
+      success: { main: successColor },
+    },
+  } = useTheme();
   const systemAnswer = furiganaTokensToString(systemAnswerTokens);
   const differences = diffChars(userAnswer, systemAnswer).filter(
     (diff) => !diff.removed
@@ -62,7 +84,7 @@ export function EvaluatedSystemAnswer({
     const { value, added, removed } = currentDiff;
     if (added) {
       currentElements.push(
-        <HighlightedChars key={currentCharIdx} color="green">
+        <HighlightedChars key={currentCharIdx} color={successColor}>
           {value.charAt(currentDiffCharIdx)}
         </HighlightedChars>
       );
