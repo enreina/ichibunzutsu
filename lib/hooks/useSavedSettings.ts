@@ -6,6 +6,7 @@ export type SavedSettings = {
   isWaniKaniEnabled?: boolean;
   waniKaniAPIKey?: string;
   isDarkModeEnabled?: boolean;
+  isQuizModeEnabled?: boolean;
 };
 
 // Reference: https://usehooks.com/useLocalStorage/

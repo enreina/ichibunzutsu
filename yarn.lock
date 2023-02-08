@@ -1444,23 +1444,13 @@ hoist-non-react-statics@^3.3.1:
   dependencies:
     react-is "^16.7.0"
 
-html-dom-parser@3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/html-dom-parser/-/html-dom-parser-3.1.2.tgz#c137c42df80e17d185ff35a806925d96cc73f408"
-  integrity sha512-mLTtl3pVn3HnqZSZzW3xVs/mJAKrG1yIw3wlp+9bdoZHHLaBRvELdpfShiPVLyjPypq1Fugv2KMDoGHW4lVXnw==
+html-dom-parser@^3.1.3:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/html-dom-parser/-/html-dom-parser-3.1.3.tgz#ba87ca379f2817ca733523cac55c90de6bac43dd"
+  integrity sha512-fI0yyNlIeSboxU+jnrA4v8qj4+M8SI9/q6AKYdwCY2qki22UtKCDTxvagHniECu7sa5/o2zFRdLleA67035lsA==
   dependencies:
     domhandler "5.0.3"
     htmlparser2 "8.0.1"
-
-html-react-parser@^3.0.4:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/html-react-parser/-/html-react-parser-3.0.6.tgz#356b861e6ad48e3221337d5a5929c5e452f8dfdd"
-  integrity sha512-kFh/qJkz4KJudCcILfI1hQKXTheRyMREXuL/WbWYUAsMsu0EOwV4nO5jA3ecu1LUNpCcebkNcBECxqpswBDlLw==
-  dependencies:
-    domhandler "5.0.3"
-    html-dom-parser "3.1.2"
-    react-property "2.0.0"
-    style-to-js "1.1.2"
 
 htmlparser2@8.0.1:
   version "8.0.1"
@@ -1502,11 +1492,6 @@ inherits@2:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
-
-inline-style-parser@0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/inline-style-parser/-/inline-style-parser-0.1.1.tgz#ec8a3b429274e9c0a1f1c4ffa9453a7fef72cea1"
-  integrity sha512-7NXolsK4CAS5+xvdj5OMMbI962hU/wvwoxk+LWR9Ek9bVtyuuYScDN6eS0rUm6TxApFpw7CX1o4uJzcd4AyD3Q==
 
 internal-slot@^1.0.3:
   version "1.0.3"
@@ -2047,11 +2032,6 @@ react-is@^18.2.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react-property@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-property/-/react-property-2.0.0.tgz#2156ba9d85fa4741faf1918b38efc1eae3c6a136"
-  integrity sha512-kzmNjIgU32mO4mmH5+iUyrqlpFQhF8K2k7eZ4fdLSOPFrD1XgEuSBv9LDEgxRXTMBqMd8ppT0x6TIzqE5pdGdw==
-
 react-transition-group@^4.4.5:
   version "4.4.5"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.5.tgz#e53d4e3f3344da8521489fbef8f2581d42becdd1"
@@ -2243,20 +2223,6 @@ strip-json-comments@^3.1.0, strip-json-comments@^3.1.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
-style-to-js@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/style-to-js/-/style-to-js-1.1.2.tgz#6821c53b86a236571236d9d15688389e81a2a893"
-  integrity sha512-aMG8jJpEF0SCGbQFY8W8CT+EjQ9ubp35FOZG3prWkNjxW/a1bEeSod0tkWiP+6iiOCDIIrQykUDkPY5LbNF87g==
-  dependencies:
-    style-to-object "0.4.0"
-
-style-to-object@0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/style-to-object/-/style-to-object-0.4.0.tgz#fdcee2ba7f195f96023a44a124683f70d463dd24"
-  integrity sha512-dAjq2m87tPn/TcYTeqMhXJRhu96WYWcxMFQxs3Y9jfYpq2jG+38u4tj0Lst6DOiYXmDuNxVJ2b1Z2uPC6wTEeg==
-  dependencies:
-    inline-style-parser "0.1.1"
-
 styled-jsx@5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/styled-jsx/-/styled-jsx-5.1.1.tgz#839a1c3aaacc4e735fed0781b8619ea5d0009d1f"
@@ -2370,6 +2336,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+wanakana@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/wanakana/-/wanakana-5.0.2.tgz#b42c940c124eb8b5980563672d7f2c6be64cfdff"
+  integrity sha512-eYTezpLYXCr+gmVmgBBYQP7A7WJphvhyx1PkrHaMrnExTiMPrgTgFLSJgo75DnZf1Wy0lA2nukNVJg7Ptvx9zA==
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"

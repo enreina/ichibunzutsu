@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEventHandler } from 'react';
 import { CssBaseline } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useSentence } from '../lib/hooks/useSentence';
@@ -14,22 +14,40 @@ import type { SettingsType } from '../components/SettingsDialog';
 import useSavedSettings from '../lib/hooks/useSavedSettings';
 import { useRouter } from 'next/router';
 import AboutDialog from '../components/AboutDialog';
-import { JapaneseSentenceElement } from '../components/JapaneseSentenceElement';
+import {
+  FuriganaMode,
+  JapaneseSentenceElement,
+} from '../components/JapaneseSentenceElement';
 import { NavigationBar, NavItemType } from '../components/NavigationBar';
+import AnswerInput from '../components/AnswerInput';
 
 const navItems: NavItemType[] = [
   { key: 'about', text: 'About', href: '?about=1', as: '/about' },
   { key: 'settings', text: 'Settings', href: '?settings=1', as: '/settings' },
 ];
+const getFuriganaMode = (
+  isAnswerVisible: boolean,
+  isQuizModeEnabled: boolean
+): FuriganaMode => {
+  if (isQuizModeEnabled) {
+    return isAnswerVisible ? 'show' : 'hide';
+  }
+  return 'hover';
+};
 
 const Home: NextPage = () => {
-  const [isEnglishVisible, setIsEnglishVisible] = useState<boolean>(false);
+  const [isAnswerVisible, setIsAnswerVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
-  const { isWaniKaniEnabled, waniKaniAPIKey } = savedSettings || {};
+  const {
+    isWaniKaniEnabled,
+    waniKaniAPIKey,
+    isQuizModeEnabled = false,
+  } = savedSettings || {};
   const { sentence, isLoading, isError, refetch } = useSentence(
     waniKaniAPIKey,
     isWaniKaniEnabled
   );
+  const [answer, setAnswer] = useState<string>('');
   const router = useRouter();
   const shouldOpenSettings = !!router.query.settings;
   const shouldOpenAbout = !!router.query.about;
@@ -40,13 +58,14 @@ const Home: NextPage = () => {
     }
   }, [savedSettings]);
 
-  const showEnglishButtonOnClick: () => void = () => {
-    setIsEnglishVisible(true);
+  const showAnswerButtonOnClick: () => void = () => {
+    setIsAnswerVisible(true);
   };
 
   const refetchSentence = () => {
     refetch();
-    setIsEnglishVisible(false);
+    setIsAnswerVisible(false);
+    setAnswer('');
   };
 
   const errorRetryHandler = () => {
@@ -60,8 +79,10 @@ const Home: NextPage = () => {
       isWaniKaniEnabled: settings.isWaniKaniEnabled,
       waniKaniAPIKey: settings.validableAPIKey?.value,
       isDarkModeEnabled: settings.isDarkModeEnabled,
+      isQuizModeEnabled: settings.isQuizModeEnabled,
     });
     router.push('/');
+    refetchSentence();
   };
 
   const closeDialogHandler = () => {
@@ -72,7 +93,14 @@ const Home: NextPage = () => {
     router.push(item.href, item.as);
   };
 
+  const answerInputChangeHandler: ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = ({ target: { value } }) => {
+    setAnswer(value);
+  };
+
   const sentenceIsLoaded = !isLoading && savedSettings && sentence;
+  const furiganaMode = getFuriganaMode(isAnswerVisible, isQuizModeEnabled);
 
   return (
     <Container maxWidth="lg">
@@ -102,40 +130,89 @@ const Home: NextPage = () => {
               variant="h4"
               align="center"
             >
-              <JapaneseSentenceElement sentence={sentence} />
+              <JapaneseSentenceElement
+                sentence={sentence}
+                furiganaMode={furiganaMode}
+              />
             </Typography>
-            {isEnglishVisible && (
-              <Typography
-                data-testid="english-sentence"
-                variant="h5"
-                align="center"
-              >
-                {sentence['en']}
-              </Typography>
+            {isQuizModeEnabled && !isAnswerVisible && (
+              <AnswerInput
+                fullWidth
+                autoComplete="off"
+                autoFocus={true}
+                variant="standard"
+                multiline={true}
+                onChange={answerInputChangeHandler}
+                onEnter={() => setIsAnswerVisible(true)}
+                sx={{ my: 3 }}
+                placeholder="Type the reading here"
+                inputProps={{
+                  sx: {
+                    textAlign: 'center',
+                    fontSize: '24px',
+                    lineHeight: '32px',
+                  },
+                }}
+              />
             )}
-            {!isEnglishVisible && (
+            {isAnswerVisible && (
+              <>
+                {isQuizModeEnabled && (
+                  <Typography
+                    sx={{
+                      my: 3,
+                      borderBottom: 1,
+                      fontSize: '24px',
+                      pt: '4px',
+                      pb: '5px',
+                    }}
+                    component="h2"
+                    variant="h5"
+                    align="center"
+                  >
+                    {answer}
+                  </Typography>
+                )}
+                <Typography
+                  data-testid="english-sentence"
+                  variant="h5"
+                  align="center"
+                >
+                  {sentence['en']}
+                </Typography>
+                <Box
+                  sx={{
+                    fontStyle: 'italic',
+                    marginTop: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                  }}
+                >
+                  {!isQuizModeEnabled && (
+                    <Typography variant="caption">
+                      Hover or click on any kanji to show furigana
+                    </Typography>
+                  )}
+                  <Typography variant="caption">
+                    Note: the furigana are automatically generated and may have
+                    errors.
+                  </Typography>
+                </Box>
+              </>
+            )}
+            {!isAnswerVisible && (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button
-                  data-testid="show-english-button"
-                  onClick={showEnglishButtonOnClick}
+                  type="submit"
+                  onClick={showAnswerButtonOnClick}
                   variant="contained"
                 >
-                  Show English
+                  Show Answer
                 </Button>
               </Box>
             )}
-            <Box
-              sx={{
-                fontStyle: 'italic',
-                marginTop: 2,
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography variant="caption">
-                Hover or click on any kanji to show furigana
-              </Typography>
-            </Box>
           </>
         )}
         {(isLoading || !savedSettings) && (
