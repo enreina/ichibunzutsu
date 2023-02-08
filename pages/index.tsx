@@ -32,7 +32,7 @@ const navItems: NavItemType[] = [
 ];
 const getFuriganaMode = (
   isAnswerVisible: boolean,
-  isQuizModeEnabled: boolean
+  isQuizModeEnabled: boolean | undefined
 ): FuriganaMode => {
   if (isQuizModeEnabled) {
     return isAnswerVisible ? 'show' : 'hide';
@@ -43,11 +43,8 @@ const getFuriganaMode = (
 const Home: NextPage = () => {
   const [isAnswerVisible, setIsAnswerVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
-  const {
-    isWaniKaniEnabled,
-    waniKaniAPIKey,
-    isQuizModeEnabled = false,
-  } = savedSettings || {};
+  const { isWaniKaniEnabled, waniKaniAPIKey, isQuizModeEnabled } =
+    savedSettings || {};
   const { sentence, isLoading, isError, refetch } = useSentence(
     waniKaniAPIKey,
     isWaniKaniEnabled
@@ -58,10 +55,10 @@ const Home: NextPage = () => {
   const shouldOpenAbout = !!router.query.about;
 
   useEffect(() => {
-    if (!savedSettings) {
+    if (!savedSettings || isQuizModeEnabled === undefined) {
       router.push('?settings=1', '/settings');
     }
-  }, [savedSettings]);
+  }, [savedSettings, isQuizModeEnabled]);
 
   const showAnswerButtonOnClick: () => void = () => {
     setIsAnswerVisible(true);
