@@ -76,3 +76,7 @@ export const tokenizeFurigana = (furiganaHTMLString: string) => {
   });
   return results;
 };
+
+export const furiganaTokensToString = (furiganaTokens: FuriganaTokenType[]) => {
+  return furiganaTokens.map((token) => token.furigana).join('');
+};

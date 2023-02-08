@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Sentence } from '../types/sentence';
 
 export type FuriganaMode = 'hover' | 'show' | 'hide';
 
-const KanjiFuriganaElement = ({
+export const KanjiFuriganaElement = ({
   kanji,
   furigana,
   mode = 'hover',
 }: {
-  kanji: string;
-  furigana: string;
+  kanji: string | ReactNode;
+  furigana: string | ReactNode;
   hoverMode?: boolean;
   mode?: FuriganaMode;
 }) => {

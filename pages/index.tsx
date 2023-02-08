@@ -20,6 +20,11 @@ import {
 } from '../components/JapaneseSentenceElement';
 import { NavigationBar, NavItemType } from '../components/NavigationBar';
 import AnswerInput from '../components/AnswerInput';
+import {
+  EvaluatedSystemAnswer,
+  EvaluatedUserAnswer,
+} from '../components/EvaluatedAnswer';
+import { furiganaTokensToString } from '../lib/kuroshiro';
 
 const navItems: NavItemType[] = [
   { key: 'about', text: 'About', href: '?about=1', as: '/about' },
@@ -82,7 +87,8 @@ const Home: NextPage = () => {
       isQuizModeEnabled: settings.isQuizModeEnabled,
     });
     router.push('/');
-    refetchSentence();
+    setAnswer('');
+    setIsAnswerVisible(false);
   };
 
   const closeDialogHandler = () => {
@@ -130,10 +136,18 @@ const Home: NextPage = () => {
               variant="h4"
               align="center"
             >
-              <JapaneseSentenceElement
-                sentence={sentence}
-                furiganaMode={furiganaMode}
-              />
+              {(!isQuizModeEnabled || !isAnswerVisible) && (
+                <JapaneseSentenceElement
+                  sentence={sentence}
+                  furiganaMode={furiganaMode}
+                />
+              )}
+              {isQuizModeEnabled && isAnswerVisible && (
+                <EvaluatedSystemAnswer
+                  userAnswer={answer}
+                  systemAnswerTokens={sentence.furiganaTokens || []}
+                />
+              )}
             </Typography>
             {isQuizModeEnabled && !isAnswerVisible && (
               <AnswerInput
@@ -170,7 +184,12 @@ const Home: NextPage = () => {
                     variant="h5"
                     align="center"
                   >
-                    {answer}
+                    <EvaluatedUserAnswer
+                      userAnswer={answer}
+                      systemAnswer={furiganaTokensToString(
+                        sentence.furiganaTokens || []
+                      )}
+                    />
                   </Typography>
                 )}
                 <Typography
