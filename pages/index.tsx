@@ -20,6 +20,11 @@ import {
 } from '../components/JapaneseSentenceElement';
 import { NavigationBar, NavItemType } from '../components/NavigationBar';
 import AnswerInput from '../components/AnswerInput';
+import {
+  EvaluatedSystemAnswer,
+  EvaluatedUserAnswer,
+} from '../components/EvaluatedAnswer';
+import { furiganaTokensToString } from '../lib/kuroshiro';
 
 const navItems: NavItemType[] = [
   { key: 'about', text: 'About', href: '?about=1', as: '/about' },
@@ -27,7 +32,7 @@ const navItems: NavItemType[] = [
 ];
 const getFuriganaMode = (
   isAnswerVisible: boolean,
-  isQuizModeEnabled: boolean
+  isQuizModeEnabled: boolean | undefined
 ): FuriganaMode => {
   if (isQuizModeEnabled) {
     return isAnswerVisible ? 'show' : 'hide';
@@ -38,11 +43,8 @@ const getFuriganaMode = (
 const Home: NextPage = () => {
   const [isAnswerVisible, setIsAnswerVisible] = useState<boolean>(false);
   const [savedSettings, setSavedSettings] = useSavedSettings();
-  const {
-    isWaniKaniEnabled,
-    waniKaniAPIKey,
-    isQuizModeEnabled = false,
-  } = savedSettings || {};
+  const { isWaniKaniEnabled, waniKaniAPIKey, isQuizModeEnabled } =
+    savedSettings || {};
   const { sentence, isLoading, isError, refetch } = useSentence(
     waniKaniAPIKey,
     isWaniKaniEnabled
@@ -53,10 +55,10 @@ const Home: NextPage = () => {
   const shouldOpenAbout = !!router.query.about;
 
   useEffect(() => {
-    if (!savedSettings) {
+    if (!savedSettings || isQuizModeEnabled === undefined) {
       router.push('?settings=1', '/settings');
     }
-  }, [savedSettings]);
+  }, [savedSettings, isQuizModeEnabled]);
 
   const showAnswerButtonOnClick: () => void = () => {
     setIsAnswerVisible(true);
@@ -82,7 +84,8 @@ const Home: NextPage = () => {
       isQuizModeEnabled: settings.isQuizModeEnabled,
     });
     router.push('/');
-    refetchSentence();
+    setAnswer('');
+    setIsAnswerVisible(false);
   };
 
   const closeDialogHandler = () => {
@@ -130,10 +133,18 @@ const Home: NextPage = () => {
               variant="h4"
               align="center"
             >
-              <JapaneseSentenceElement
-                sentence={sentence}
-                furiganaMode={furiganaMode}
-              />
+              {(!isQuizModeEnabled || !isAnswerVisible) && (
+                <JapaneseSentenceElement
+                  sentence={sentence}
+                  furiganaMode={furiganaMode}
+                />
+              )}
+              {isQuizModeEnabled && isAnswerVisible && (
+                <EvaluatedSystemAnswer
+                  userAnswer={answer}
+                  systemAnswerTokens={sentence.furiganaTokens || []}
+                />
+              )}
             </Typography>
             {isQuizModeEnabled && !isAnswerVisible && (
               <AnswerInput
@@ -170,7 +181,12 @@ const Home: NextPage = () => {
                     variant="h5"
                     align="center"
                   >
-                    {answer}
+                    <EvaluatedUserAnswer
+                      userAnswer={answer}
+                      systemAnswer={furiganaTokensToString(
+                        sentence.furiganaTokens || []
+                      )}
+                    />
                   </Typography>
                 )}
                 <Typography

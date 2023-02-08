@@ -105,7 +105,7 @@ export default function SettingsDialog({
         }
       : undefined,
     isDarkModeEnabled: savedSettings?.isDarkModeEnabled || false,
-    isQuizModeEnabled: savedSettings?.isQuizModeEnabled || false,
+    isQuizModeEnabled: savedSettings?.isQuizModeEnabled || true,
   };
   const [settings, setSettings] = useState<SettingsType>(initialSettings);
   const {
@@ -233,7 +233,7 @@ export default function SettingsDialog({
           />
         )}
         <Typography variant="subtitle1" gutterBottom>
-          Quiz Mode
+          Quiz Mode <strong>(NEW!)</strong>
         </Typography>
         <FormControlLabel
           control={
