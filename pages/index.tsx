@@ -122,119 +122,116 @@ const Home: NextPage = () => {
       />
 
       <Paper sx={{ my: 4, p: { xs: 2, md: 3 } }}>
-        <form>
-          {sentenceIsLoaded && (
-            <>
-              <Typography
-                data-testid="japanese-sentence"
-                component="h1"
-                variant="h4"
-                align="center"
-              >
-                <JapaneseSentenceElement
-                  sentence={sentence}
-                  furiganaMode={furiganaMode}
-                />
-              </Typography>
-              {isQuizModeEnabled && !isAnswerVisible && (
-                <AnswerInput
-                  fullWidth
-                  autoComplete="off"
-                  autoFocus={true}
-                  variant="standard"
-                  multiline={true}
-                  onChange={answerInputChangeHandler}
-                  onEnter={() => setIsAnswerVisible(true)}
-                  sx={{ my: 3 }}
-                  placeholder="Type the reading here"
-                  inputProps={{
-                    sx: {
-                      textAlign: 'center',
-                      fontSize: '24px',
-                      lineHeight: '32px',
-                    },
-                  }}
-                />
-              )}
-              {isAnswerVisible && (
-                <>
-                  {isQuizModeEnabled && (
-                    <Typography
-                      sx={{
-                        my: 3,
-                        borderBottom: 1,
-                        fontSize: '24px',
-                        pt: '4px',
-                        pb: '5px',
-                      }}
-                      component="h2"
-                      variant="h5"
-                      align="center"
-                    >
-                      {answer}
-                    </Typography>
-                  )}
+        {sentenceIsLoaded && (
+          <>
+            <Typography
+              data-testid="japanese-sentence"
+              component="h1"
+              variant="h4"
+              align="center"
+            >
+              <JapaneseSentenceElement
+                sentence={sentence}
+                furiganaMode={furiganaMode}
+              />
+            </Typography>
+            {isQuizModeEnabled && !isAnswerVisible && (
+              <AnswerInput
+                fullWidth
+                autoComplete="off"
+                autoFocus={true}
+                variant="standard"
+                multiline={true}
+                onChange={answerInputChangeHandler}
+                onEnter={() => setIsAnswerVisible(true)}
+                sx={{ my: 3 }}
+                placeholder="Type the reading here"
+                inputProps={{
+                  sx: {
+                    textAlign: 'center',
+                    fontSize: '24px',
+                    lineHeight: '32px',
+                  },
+                }}
+              />
+            )}
+            {isAnswerVisible && (
+              <>
+                {isQuizModeEnabled && (
                   <Typography
-                    data-testid="english-sentence"
+                    sx={{
+                      my: 3,
+                      borderBottom: 1,
+                      fontSize: '24px',
+                      pt: '4px',
+                      pb: '5px',
+                    }}
+                    component="h2"
                     variant="h5"
                     align="center"
                   >
-                    {sentence['en']}
+                    {answer}
                   </Typography>
-                  <Box
-                    sx={{
-                      fontStyle: 'italic',
-                      marginTop: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {!isQuizModeEnabled && (
-                      <Typography variant="caption">
-                        Hover or click on any kanji to show furigana
-                      </Typography>
-                    )}
+                )}
+                <Typography
+                  data-testid="english-sentence"
+                  variant="h5"
+                  align="center"
+                >
+                  {sentence['en']}
+                </Typography>
+                <Box
+                  sx={{
+                    fontStyle: 'italic',
+                    marginTop: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                  }}
+                >
+                  {!isQuizModeEnabled && (
                     <Typography variant="caption">
-                      Note: the furigana are automatically generated and may
-                      have errors.
+                      Hover or click on any kanji to show furigana
                     </Typography>
-                  </Box>
-                </>
-              )}
-              {!isAnswerVisible && (
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Button
-                    type="submit"
-                    data-testid="show-english-button"
-                    onClick={showAnswerButtonOnClick}
-                    variant="contained"
-                  >
-                    Show Answer
-                  </Button>
+                  )}
+                  <Typography variant="caption">
+                    Note: the furigana are automatically generated and may have
+                    errors.
+                  </Typography>
                 </Box>
-              )}
-            </>
-          )}
-          {(isLoading || !savedSettings) && (
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-              <CircularProgress />
-            </Box>
-          )}
-          {isError && savedSettings && (
-            <>
-              <Typography variant="h5" align="center">
-                Could not fetch sentence
-              </Typography>
+              </>
+            )}
+            {!isAnswerVisible && (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="contained" onClick={errorRetryHandler}>
-                  Retry
+                <Button
+                  type="submit"
+                  onClick={showAnswerButtonOnClick}
+                  variant="contained"
+                >
+                  Show Answer
                 </Button>
               </Box>
-            </>
-          )}
-        </form>
+            )}
+          </>
+        )}
+        {(isLoading || !savedSettings) && (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <CircularProgress />
+          </Box>
+        )}
+        {isError && savedSettings && (
+          <>
+            <Typography variant="h5" align="center">
+              Could not fetch sentence
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Button variant="contained" onClick={errorRetryHandler}>
+                Retry
+              </Button>
+            </Box>
+          </>
+        )}
       </Paper>
 
       {sentenceIsLoaded && (
