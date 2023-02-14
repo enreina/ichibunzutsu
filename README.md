@@ -1,6 +1,7 @@
 # Ichi Bun Zutsu
 
-A web app for Japanese reading practice by presenting a Japanese sentence every day.
+A web app to practice your Japanese reading skill -- one sentence at a time.
+Try it out on https://ichibunzutsu.vercel.app
 
 ![](app-demo.gif)
 
