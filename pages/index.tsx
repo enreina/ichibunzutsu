@@ -5,7 +5,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { useState, useEffect, ChangeEventHandler } from 'react';
+import { useState, useEffect, ChangeEventHandler, useRef } from 'react';
 import { CssBaseline } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useSentence } from '../lib/hooks/useSentence';
@@ -50,6 +50,7 @@ const Home: NextPage = () => {
     isWaniKaniEnabled
   );
   const [answer, setAnswer] = useState<string>('');
+  const refetchButtonRef = useRef<HTMLButtonElement | null>(null);
   const router = useRouter();
   const shouldOpenSettings = !!router.query.settings;
   const shouldOpenAbout = !!router.query.about;
@@ -59,6 +60,12 @@ const Home: NextPage = () => {
       router.push('?settings=1', '/settings');
     }
   }, [savedSettings, isQuizModeEnabled]);
+
+  useEffect(() => {
+    if (isAnswerVisible && refetchButtonRef.current) {
+      refetchButtonRef.current.focus(); // When answer is visible, set focus to refetch button so user could use the enter key to go to the next sentence
+    }
+  }, [isAnswerVisible]);
 
   const showAnswerButtonOnClick: () => void = () => {
     setIsAnswerVisible(true);
@@ -253,6 +260,7 @@ const Home: NextPage = () => {
       {sentenceIsLoaded && (
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
           <Button
+            ref={refetchButtonRef}
             sx={{ textTransform: 'none' }}
             onClick={refetchSentence}
             variant="text"
