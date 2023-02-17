@@ -228,6 +228,7 @@ const Home: NextPage = () => {
             {!isAnswerVisible && (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button
+                  autoFocus={!isQuizModeEnabled}
                   type="submit"
                   onClick={showAnswerButtonOnClick}
                   variant="contained"
